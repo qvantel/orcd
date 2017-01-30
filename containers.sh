@@ -9,13 +9,10 @@ GRAPHITE_VERSION="0.9.15"
 GRAPHITE=nickstenning/graphite:$GRAPHITE_VERSION
 
 
-usage="Usage: [status|start|stop|help]"
+usage="Usage: [start|stop|help]"
 
 case "$1"
 in
-	"status")
-		echo "Not yet implemented"
-	;;
 	"start")
 		echo "NOTICE: All docker containers are not yet implemented"
 		docker run --name cassandra -d $CASSANDRA
