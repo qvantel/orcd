@@ -1,11 +1,24 @@
-CASSANDRA_VERSION="3.9"
-GRAPHITE_VERSION="0.9.15"
+#!/bin/bash
 
- # define main 
+# Cassandra
+CASSANDRA_VERSION="3.9"
+CASSANDRA=cassandra:$CASSANDRA_VERSION
+
+# Graphite
+GRAPHITE_VERSION="0.9.15"
+GRAPHITE=nickstenning/graphite:$GRAPHITE_VERSION
+
+containers="cassandra graphite"
+
+# define main
 
 function main { 
 
 args=$1
+
+usage="\
+Usage: [status|start|stop] [CONTAINER|all]\n
+\tContainers: $containers"
 
 case "$args"  
 in
@@ -18,32 +31,46 @@ in
 		in 
 			"cassandra")
 				echo "Start cassandra"
-				docker run --name cassandra -d cassandra:"$CASSANDRA_VERSION"
+				docker run --name cassandra -d $CASSANDRA
 			;;
 			"graphite")
 				echo "Start graphite"
-				docker run --name graphite -d graphite:"$GRAPHITE_VERSION"
+				docker run --name graphite -d $GRAPHITE
 			;;
 			"rest")
-				echo "Start rest"
+				echo "Docker container for REST server not yet implemented"
 			;;
 			"app")
-				echo "Start app"
+				echo "Docker container for webapp not yet implemented"
 			;;
 			"all")
-				echo "Start all"
+				echo "NOTICE: All docker containers are not yet implemented, only starting: $containers"
+				main start cassandra
+				main start graphite
 			;;
 			*)
-				echo -e "Usage: \n start	cassandra\n	graphite\n	rest\n	app\n	all"
+				echo $usage
 			;;
 			
 		esac
 	;;
 	"stop")
-		echo "stop"
+		shift
+		case "$1"
+		in
+			"all")
+				echo "Stopping containers"
+				docker stop $containers > /dev/null
+				echo "Removing containers"
+				docker rm $containers > /dev/null
+			;;
+			*)
+				echo "$usage"
+			;;
+		esac
 	;;
 	"help"|*)
-		echo -e "Commands:\nStatus\nStart\nStop\nHelp"
+		echo -e $usage
 	;;
 
 esac
