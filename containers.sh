@@ -13,8 +13,8 @@ BACKEND_VERSION="latest"
 BACKEND=backend:$BACKEND_VERSION
 
 # Grafana
-GRAFANA_VERSION="latest"
-GRAFANA=grafana:$GRAFANA_VERSION
+GRAFANA_VERSION="4.1.1"
+GRAFANA=grafana/grafana:$GRAFANA_VERSION
 
 usage="Usage: [start|stop|help]"
 
@@ -44,7 +44,7 @@ in
 		docker run -d --name frontend \
 			-p 3000:3000 \
 			-v $GRAFANA_VOLUME_TARGET:/var/lib/grafana \
-			grafana/grafana
+			$GRAFANA
 	;;
 	"stop")
 		echo "Stopping containers"
