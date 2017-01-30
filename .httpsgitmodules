@@ -1,0 +1,6 @@
+[submodule "QvantelBackend"]
+	path = QvantelBackend
+	url = https://github.com/flygare/QvantelBackend.git
+[submodule "QvantelFrontend"]
+	path = QvantelFrontend
+	url = https://github.com/flygare/QvantelFrontend.git
