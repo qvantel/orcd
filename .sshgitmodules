@@ -4,3 +4,6 @@
 [submodule "QvantelFrontend"]
 	path = QvantelFrontend
 	url = git@github.com:flygare/QvantelFrontend.git
+[submodule "QvantelCDRGenerator"]
+	path = QvantelCDRGenerator
+	url = git@github.com:flygare/QvantelCDRGenerator.git
