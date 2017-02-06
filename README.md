@@ -5,7 +5,7 @@ Qvantel
 
 Will consist of a REST backend, a Cassandra database and a Graphite database. All of which will be configured and set up with Docker containers
 
-**Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozed Miljak, Martin Svensson
+**Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozed Miljak and Martin Svensson
 
 ### Frontend
 
