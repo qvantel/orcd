@@ -18,33 +18,45 @@ GRAFANA=grafana/grafana:$GRAFANA_VERSION
 
 usage="Usage: [start|stop|help]"
 
+GRAFANA_VOLUME_TARGET=$HOME/grafana
+CASSANDRA_VOLUME_TARGET=$HOME/cassandra
+
+
 case "$1"
 in
 	"start")
 		# Cassandra container
-		docker run --name cassandra -d $CASSANDRA
+		# Port: 9042
+		docker run \
+			--name cassandra \
+			-p 9042:9042 \
+			-d cassandra
 
 		# Graphite container
-		docker run --name graphite -d $GRAPHITE
+		# Ports: Receive=2003, WebApp=2000
+		docker run \
+			--name graphite \
+			-p 2003:2003 -p 2000:80 \
+			-d $GRAPHITE
 
 		# Backend container
+		# Port: 8080
 		(cd ./QvantelBackend; sbt assembly)
 		if [[ "$(docker images -q $BACKEND 2> /dev/null)" == "" ]]; then
 			docker rmi $BACKEND
 		fi
 		docker build -t backend ./QvantelBackend
-		docker run --name backend -p 8080:8080 -d $BACKEND
+		docker run \
+			--name backend \
+			-p 8080:8080 \
+			-d $BACKEND
 
 		# Frontend container
-		if [[ $OSTYPE == *"darwin"* ]]; then
-			GRAFANA_VOLUME_TARGET=$HOME/grafana
-		else
-			GRAFANA_VOLUME_TARGET=/var/lib/grafana
-		fi
-		docker run -d --name frontend \
+		# Port: 3000
+		docker run --name frontend \
 			-p 3000:3000 \
 			-v $GRAFANA_VOLUME_TARGET:/var/lib/grafana \
-			$GRAFANA
+			-d $GRAFANA
 	;;
 	"stop")
 		echo "Stopping containers"
