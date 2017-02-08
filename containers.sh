@@ -32,7 +32,7 @@ in
     "start")
         # Cassandra container
         # Port: 9042
-        if [ ! "$(docker ps | grep cassandra)" ]; then
+        if [ ! "$(docker ps --all | grep cassandra)" ]; then
             echo -e $YELLOW"### Creating cassandra container"$RESET
             docker run \
                 --restart=always \
@@ -46,7 +46,7 @@ in
 
         # Graphite container
         # Ports: Receive=2003, WebApp=2000
-        if [ ! "$(docker ps | grep graphite)" ]; then
+        if [ ! "$(docker ps --all | grep graphite)" ]; then
             echo -e $YELLOW"### Creating graphite container"$RESET
             docker run \
                 --restart=always \
@@ -83,7 +83,7 @@ in
 
         # Frontend container
         # Port: 3000
-        if [ ! "$(docker ps | grep frontend)" ]; then
+        if [ ! "$(docker ps --all | grep frontend)" ]; then
             echo -e $YELLOW"### Creating frontend container"$RESET
             docker run --name frontend \
                 --restart=always \
