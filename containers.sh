@@ -1,9 +1,9 @@
 #!/bin/bash
 
-RED="\e[3#1m"
-GREEN="\e[3#2m"
-YELLOW="\e[3#3m"
-RESET="\e[b\e[m"
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+RESET=$(tput sgr0)
 
 # Cassandra
 CASSANDRA_VERSION="3.9"
