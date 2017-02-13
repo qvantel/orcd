@@ -52,6 +52,7 @@ $ docker run
 ```
 ### Stop a docker container
 `$ docker rm stop NAME # Where name is the automatically created or manually chosen one.`
+
 Unsure about the name? See List containers and check the name column
 
 ### Remove a docker container
@@ -68,6 +69,7 @@ Run `$ ./configure_ssh_https.sh https` or `./configure_ssh_https.sh ssh`
 Pull all changes
 ======
 Run `$ ./pullall`
+
 Issues with SSH? Try changing to HTTPS in Configure HTTPS/SSH-section
 
 Docker DNS issue
