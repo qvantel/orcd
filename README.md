@@ -16,10 +16,10 @@ Will consist of a Grafana frontend which will talk to the REST backend, which wi
 Common commands
 ======
 
-### Docker
+# Docker
 Most of the commands need to be known are inside `containers.sh`
 
-## Remove having to perform sudo for every docker command
+### Remove having to perform sudo for every docker command
 `$ sudo groupadd docker` (Does not matter if the group is already added)
 
 `$ sudo gpasswd -a student docker` (Add yourself to the docker group)
@@ -28,21 +28,21 @@ Most of the commands need to be known are inside `containers.sh`
 
 ***IMPORTANT:*** Remember to log out and back in for these things to be in effect.
 
-## Run a shell or program in a container
+### Run a shell or program in a container
 ```
 $ docker exec -it CONTAINER_NAME service
 ```
 Where service is e.g `bash/zsh/cqlsh`.
 
 
-## List containers
-# Running
+### List containers
+## Running
 `$ docker ps`
 
-# Inactive/stopped
+## Inactive/stopped
 `$ docker ps -a`
 
-## Run a docker container
+### Run a docker container
 ```
 $ docker run
 		--name=some_name_the_container_is_differentiated
@@ -50,12 +50,12 @@ $ docker run
 		-d # Run the container in detached mode. When creating it, do not have an interactive shell.
 		VERSION # "Cassandra", or "grafana:4.1.1" or "backend:latest"
 ```
-## Stop a docker container
+### Stop a docker container
 ```
 ```
 Unsure about the name? See List containers and check the name column
 
-## Remove a docker container
+### Remove a docker container
 `$ docker stop NAME # Where name is the automatically created or manually chosen one.`
 
 Unsure about the name? See List containers and check the name column
