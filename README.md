@@ -51,8 +51,7 @@ $ docker run
 		VERSION # "Cassandra", or "grafana:4.1.1" or "backend:latest"
 ```
 ### Stop a docker container
-```
-```
+`$ docker rm stop NAME # Where name is the automatically created or manually chosen one.`
 Unsure about the name? See List containers and check the name column
 
 ### Remove a docker container
@@ -74,4 +73,5 @@ Issues with SSH? Try changing to HTTPS in Configure HTTPS/SSH-section
 Docker DNS issue
 ======
 Does deploying back-end result in an issue? Let the docker container share your DNS configuration
+
 `$ ./telenor_wifi_docker_dns_fix.sh`
