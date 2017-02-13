@@ -51,7 +51,7 @@ $ docker run
 		VERSION # "Cassandra", or "grafana:4.1.1" or "backend:latest"
 ```
 ### Stop a docker container
-`$ docker rm stop NAME # Where name is the automatically created or manually chosen one.`
+`$ docker rm NAME # Where name is the automatically created or manually chosen one.`
 
 Unsure about the name? See List containers and check the name column
 
