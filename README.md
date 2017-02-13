@@ -17,7 +17,7 @@ Common commands
 ======
 
 # Docker
-Most of the commands need to be known are inside `containers.sh`
+***Most*** of the commands need to be known are inside `containers.sh`
 
 ### Remove having to perform sudo for every docker command
 `$ sudo groupadd docker` (Does not matter if the group is already added)
@@ -30,9 +30,9 @@ Most of the commands need to be known are inside `containers.sh`
 
 ### Run a shell or program in a container
 ```
-$ docker exec -it CONTAINER_NAME service
+$ docker exec -it CONTAINER_NAME program
 ```
-Where service is e.g `bash/zsh/cqlsh`.
+Where program is e.g `bash/zsh/cqlsh`.
 
 
 ### List containers
@@ -51,15 +51,16 @@ $ docker run
 		VERSION # "Cassandra", or "grafana:4.1.1" or "backend:latest"
 ```
 ### Stop a docker container
-`$ docker rm NAME # Where name is the automatically created or manually chosen one.`
-
-Unsure about the name? See List containers and check the name column
-
-### Remove a docker container
 `$ docker stop NAME # Where name is the automatically created or manually chosen one.`
 
 Unsure about the name? See List containers and check the name column
 
+### Remove a docker container
+Requires the container to be stopped. See stopping a container to see how.
+
+`$ docker rm NAME # Where name is the automatically created or manually chosen one.`
+
+Unsure about the name? See List containers and check the name column
 
 Configure HTTPS/SSH
 ======
