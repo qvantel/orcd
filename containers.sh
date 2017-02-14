@@ -17,6 +17,14 @@ GRAPHITE=nickstenning/graphite:$GRAPHITE_VERSION
 BACKEND_VERSION="latest"
 BACKEND=backend:$BACKEND_VERSION
 
+# DBConnector
+CDRGENERATOR_VERSION="latest"
+CDRGENERATOR=cdrgenerator:$CDRGENERATOR_VERSION
+
+# DBConnector
+DBCONNECTOR_VERSION="latest"
+DBCONNECTOR=dbconnector:$DBCONNECTOR_VERSION
+
 # Grafana
 GRAFANA_VERSION="4.1.1"
 GRAFANA=grafana/grafana:$GRAFANA_VERSION
@@ -80,6 +88,50 @@ in
             --name backend \
             -p 8080:8080 \
             -d $BACKEND
+
+	# CDRGenerator container
+        echo -e $YELLOW"### Cleaning CDRGenerator container"$RESET
+        if [[ "$(docker ps | grep cdrgenerator)" ]]; then
+            docker stop cdrgenerator
+        fi
+        if [[ "$(docker ps --all | grep cdrgenerator)" ]]; then
+            docker rm cdrgenerator
+        fi
+        if [[ "$(docker images -q $CDRGENERATOR 2> /dev/null)" == "" ]]; then
+            docker rmi $CDRGENERATOR
+        fi
+        echo -e $YELLOW"### Compiling CDRGenerator container"$RESET
+        (cd ./QvantelCDRGenerator; sbt assembly)
+        echo -e $YELLOW"### Building CDRGenerator container"$RESET
+        docker build -t cdrgenerator ./QvantelCDRGenerator
+        echo -e $GREEN"### Starting CDRGenerator container"$RESET
+        docker run \
+            --restart=always \
+	    --net=host \
+            --name cdrgenerator \
+            -d $CDRGENERATOR
+
+	# DBConnector container
+        echo -e $YELLOW"### Cleaning DBConnector container"$RESET
+        if [[ "$(docker ps | grep dbconnector)" ]]; then
+            docker stop dbconnector
+        fi
+        if [[ "$(docker ps --all | grep dbconnector)" ]]; then
+            docker rm dbconnector
+        fi
+        if [[ "$(docker images -q $DBCONNECTOR 2> /dev/null)" == "" ]]; then
+            docker rmi $DBCONNECTOR
+        fi
+        echo -e $YELLOW"### Compiling DBConnector container"$RESET
+        (cd ./QvantelDBConnector; sbt assembly)
+        echo -e $YELLOW"### Building DBConnector container"$RESET
+        docker build -t dbconnector ./QvantelDBConnector
+        echo -e $GREEN"### Starting DBConnector container"$RESET
+        docker run \
+            --restart=always \
+	    --net=host \
+            --name dbconnector \
+            -d $DBCONNECTOR
 
         # Frontend container
         # Port: 3000
