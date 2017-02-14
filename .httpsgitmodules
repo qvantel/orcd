@@ -7,3 +7,6 @@
 [submodule "QvantelCDRGenerator"]
 	path = QvantelCDRGenerator
 	url = https://github.com/flygare/QvantelCDRGenerator.git
+[submodule "QvantelDBConnector"]
+	path = QvantelDBConnector
+	url = https://github.com/flygare/QvantelDBConnector.git
