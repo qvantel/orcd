@@ -85,16 +85,16 @@ in
         if [[ "$(docker images -q $BACKEND 2> /dev/null)" == "" ]]; then
             docker rmi $BACKEND
         fi
-        echo -e $YELLOW"### Compiling backend container"$RESET
-        (cd ./QvantelBackend; sbt assembly)
-        echo -e $YELLOW"### Building backend container"$RESET
-        docker build -t backend ./QvantelBackend
-        echo -e $GREEN"### Starting backend container"$RESET
-        docker run \
-            --restart=always \
-            --name backend \
-            -p 8080:8080 \
-            -d $BACKEND
+        # echo -e $YELLOW"### Compiling backend container"$RESET
+        # (cd ./QvantelBackend; sbt assembly)
+        # echo -e $YELLOW"### Building backend container"$RESET
+        # docker build -t backend ./QvantelBackend
+        # echo -e $GREEN"### Starting backend container"$RESET
+        # docker run \
+            # --restart=always \
+            # --name backend \
+            # -p 8080:8080 \
+            # -d $BACKEND
 
 	# CDRGenerator container
         echo -e $YELLOW"### Cleaning CDRGenerator container"$RESET
