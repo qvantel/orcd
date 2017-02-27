@@ -1,8 +1,11 @@
 #!/bin/bash
 
+start=$SECONDS
+
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
+CYAN=$(tput setaf 6)
 RESET=$(tput sgr0)
 
 # Cassandra
@@ -153,16 +156,19 @@ in
     ;;
     "stop")
         echo -e $RED"Stopping containers"$RESET
-        docker stop cassandra graphite backend frontend > /dev/null
+        docker stop cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
     ;;
     "clean")
         echo -e $RED"Stopping containers"$RESET
-        docker stop cassandra graphite backend frontend > /dev/null
+        docker stop cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
         echo -e $RED"Removing containers"$RESET
-        docker rm cassandra graphite backend frontend > /dev/null
+        docker rm cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
     ;;
     "help"|*)
         echo -e $usage
     ;;
 
 esac
+
+duration=$(( SECONDS - start ))
+echo -e $CYAN"< Execution took $duration seconds >"$RESET
