@@ -42,11 +42,15 @@ in
         # Port: 9042
         if [ ! "$(docker ps --all | grep cassandra)" ]; then
             echo -e $YELLOW"### Creating cassandra container"$RESET
+	    docker build -t cassandra ./Cassandra
             docker run \
                 --restart=always \
                 --name cassandra \
                 -p 9042:9042 \
                 -d cassandra
+	    echo "waiting for port to open"
+	    sleep 15
+	    docker exec -it cassandra cqlsh -f /schema.cql
         else
             echo -e $GREEN"### Restarting cassandra container"$RESET
             docker restart cassandra
