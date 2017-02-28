@@ -1,0 +1,4 @@
+language: bash
+
+git:
+  submodules: false
