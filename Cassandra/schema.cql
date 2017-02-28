@@ -53,21 +53,23 @@ charged_amounts set <frozen <ChargedAmounts>>
 );
 
 CREATE TABLE IF NOT EXISTS qvantel.call(
-id uuid PRIMARY KEY,
+id uuid,
 created_at timestamp,
 started_at timestamp,
 used_service_units frozen <ServiceUnit>,
 service text,
 event_details frozen <CallEventDetails>,
-event_charges frozen <EventCharges>
+event_charges frozen <EventCharges>,
+PRIMARY KEY (id, created_at)
 );
 
 CREATE TABLE IF NOT EXISTS qvantel.product(
-id uuid PRIMARY KEY,
+id uuid,
 created_at timestamp,
 started_at timestamp,
 used_service_units frozen <ServiceUnit>,
 service text,
 event_details frozen <DataEventDetails>,
-event_charges frozen <EventCharges>
+event_charges frozen <EventCharges>,
+PRIMARY KEY (id, created_at)
 );
