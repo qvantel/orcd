@@ -61,7 +61,8 @@ service text,
 event_details frozen <CallEventDetails>,
 event_charges frozen <EventCharges>,
 PRIMARY KEY (id, created_at)
-);
+)
+WITH CLUSTERING ORDER BY (created_at ASC);
 
 CREATE TABLE IF NOT EXISTS qvantel.product(
 id uuid,
@@ -72,4 +73,6 @@ service text,
 event_details frozen <DataEventDetails>,
 event_charges frozen <EventCharges>,
 PRIMARY KEY (id, created_at)
-);
+)
+WITH CLUSTERING ORDER BY (created_at ASC)
+;
