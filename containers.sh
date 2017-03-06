@@ -11,6 +11,7 @@ RESET=$(tput sgr0)
 # Cassandra
 CASSANDRA_VERSION="3.9"
 CASSANDRA=cassandra:$CASSANDRA_VERSION
+CASSANDRA_PORT=9042
 
 # Graphite
 GRAPHITE_VERSION="0.9.15"
@@ -45,15 +46,41 @@ in
         # Port: 9042
         if [ ! "$(docker ps --all | grep cassandra)" ]; then
             echo -e $YELLOW"### Creating cassandra container"$RESET
+	    docker build -t cassandra ./Cassandra
             docker run \
                 --restart=always \
                 --name cassandra \
-                -p 9042:9042 \
+                -p $CASSANDRA_PORT:$CASSANDRA_PORT \
                 -d cassandra
+
+            if [ -n "$(docker ps | grep cassandra)" ]
+            then
+              echo "Waiting for port to open"
+              while [ -n "$(docker exec -it cassandra cqlsh -e exit 2>&1 | grep '\(e\|E\)rror')" ]
+              do
+                sleep 1
+              done
+              echo "Cqlsh is up and running"
+              echo "Running schema"
+              docker exec -it cassandra cqlsh -f /schema.cql
+            fi
+
         else
             echo -e $GREEN"### Restarting cassandra container"$RESET
             docker restart cassandra
+
+            if [ -n "$(docker ps | grep cassandra)" ]
+            then
+              echo "Waiting for port to open"
+              while [ -n "$(docker exec -it cassandra cqlsh -e exit 2>&1 | grep '\(e\|E\)rror')" ]
+              do
+                sleep 1
+              done
+              echo "Cqlsh is up and running"
+            fi
+
         fi
+
 
         # Graphite container
         # Ports: Receive=2003, WebApp=2000
@@ -71,26 +98,26 @@ in
 
         # Backend container
         # Port: 8080
-        echo -e $YELLOW"### Cleaning backend container"$RESET
-        if [[ "$(docker ps | grep backend)" ]]; then
-            docker stop backend
-        fi
-        if [[ "$(docker ps --all | grep backend)" ]]; then
-            docker rm backend
-        fi
-        if [[ "$(docker images -q $BACKEND 2> /dev/null)" == "" ]]; then
-            docker rmi $BACKEND
-        fi
-        echo -e $YELLOW"### Compiling backend container"$RESET
-        (cd ./QvantelBackend; sbt assembly)
-        echo -e $YELLOW"### Building backend container"$RESET
-        docker build -t backend ./QvantelBackend
-        echo -e $GREEN"### Starting backend container"$RESET
-        docker run \
-            --restart=always \
-            --name backend \
-            -p 8080:8080 \
-            -d $BACKEND
+        # echo -e $YELLOW"### Cleaning backend container"$RESET
+        # if [[ "$(docker ps | grep backend)" ]]; then
+        #     docker stop backend
+        # fi
+        # if [[ "$(docker ps --all | grep backend)" ]]; then
+        #     docker rm backend
+        # fi
+        # if [[ "$(docker images -q $BACKEND 2> /dev/null)" == "" ]]; then
+        #     docker rmi $BACKEND
+        # fi
+        # echo -e $YELLOW"### Compiling backend container"$RESET
+        # (cd ./QvantelBackend; sbt assembly)
+        # echo -e $YELLOW"### Building backend container"$RESET
+        # docker build -t backend ./QvantelBackend
+        # echo -e $GREEN"### Starting backend container"$RESET
+        # docker run \
+            # --restart=always \
+            # --name backend \
+            # -p 8080:8080 \
+            # -d $BACKEND
 
 	# CDRGenerator container
         echo -e $YELLOW"### Cleaning CDRGenerator container"$RESET
