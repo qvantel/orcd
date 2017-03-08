@@ -33,7 +33,8 @@ DBCONNECTOR=dbconnector:$DBCONNECTOR_VERSION
 GRAFANA_VERSION="4.1.1"
 GRAFANA=grafana/grafana:$GRAFANA_VERSION
 
-usage="Usage: [start|stop|clean|help]"
+usage="Usage: [start|stop|clean|help]
+              start [(cass|cassandra)|(cdr|cdrgenerator)|graphite|(dbc|dbconnector)|frontend|"
 
 GRAFANA_VOLUME_TARGET=$HOME/grafana
 CASSANDRA_VOLUME_TARGET=$HOME/cassandra
@@ -49,33 +50,11 @@ function cassandra {
             --name cassandra \
             -p $CASSANDRA_PORT:$CASSANDRA_PORT \
             -d cassandra
-
-        if [ -n "$(docker ps | grep cassandra)" ]
-        then
-          echo "Waiting for port to open"
-          while [ -n "$(docker exec -it cassandra cqlsh -e exit 2>&1 | grep '\(e\|E\)rror')" ]
-          do
-            sleep 1
-          done
-          echo "Cqlsh is up and running"
-          echo "Running schema"
-          docker exec -it cassandra cqlsh -f /schema.cql
-        fi
-
+        export cass_build=1
     else
         echo -e $GREEN"### Restarting cassandra container"$RESET
         docker restart cassandra
-
-        if [ -n "$(docker ps | grep cassandra)" ]
-        then
-          echo "Waiting for port to open"
-          while [ -n "$(docker exec -it cassandra cqlsh -e exit 2>&1 | grep '\(e\|E\)rror')" ]
-          do
-            sleep 1
-          done
-          echo "Cqlsh is up and running"
-        fi
-
+        export cass_build=0
     fi
 }
 
@@ -122,6 +101,20 @@ function backend {
 }
 
 function cdrgenerator {
+    if [ -n "$(docker ps | grep cassandra)" ]
+    then
+      echo "Waiting for port to open"
+      while [ -n "$(docker exec -it cassandra cqlsh -e exit 2>&1 | grep '\(e\|E\)rror')" ]
+      do
+        sleep 1
+      done
+      echo "Cqlsh is up and running"
+      if [ "$cass_build" -eq 1 ]; then
+          echo "Running schema"
+          docker exec -it cassandra cqlsh -f /schema.cql
+          cass_build=0
+      fi
+    fi
     # CDRGenerator container
     echo -e $YELLOW"### Cleaning CDRGenerator container"$RESET
     if [[ "$(docker ps | grep cdrgenerator)" ]]; then
@@ -184,6 +177,16 @@ function frontend {
         docker restart frontend
     fi
 }
+
+function load_order {
+    # Be careful when editing the order
+    # If you know what you're doing, great.
+    cassandra
+    graphite
+    cdrgenerator
+    dbconnector
+    frontend
+ }
 case "$1"
 in
     "start")
@@ -205,11 +208,7 @@ in
                 frontend
             ;;
             *)
-                graphite
-                cassandra
-                cdrgenerator
-                dbconnector
-                frontend
+                load_order
             ;;
          esac
     ;;
