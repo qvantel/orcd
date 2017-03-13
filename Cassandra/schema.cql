@@ -83,8 +83,7 @@ name text,
 PRIMARY KEY (id)
 );
 
-INSERT INTO qvantel.products(id, name) VALUES 
-(uuid(), "Data Plan Normal"),
-(uuid(), "Data Plan Extra"),
-(uuid(), "Data Plan World");
+INSERT INTO qvantel.products(id, name) VALUES (uuid(), 'Data plan normal')
+INSERT INTO qvantel.products(id, name) VALUES (uuid(), 'Data plan extra')
+INSERT INTO qvantel.products(id, name) VALUES (uuid(), 'Data plan world')
 
