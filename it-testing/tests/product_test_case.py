@@ -1,4 +1,6 @@
 import unittest
+import sys
+sys.path.append('..')
 from client import Client
 
 
@@ -19,7 +21,6 @@ class ProductTestCase(unittest.TestCase):
         url = "http://localhost:2000/render?target=qvantel.product.Dataplannormal&format=json&from=-50s&until"
         response = self.client.request(url)
         self.assert_datapoints(response)
-
 
     def test_product_data_plan_world(self):
         """Testing response of qvantel.product.Dataplanworld."""
