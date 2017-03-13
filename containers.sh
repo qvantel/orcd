@@ -1,5 +1,4 @@
 #!/bin/bash
-
 start=$SECONDS
 
 RED=$(tput setaf 1)
@@ -75,6 +74,7 @@ function graphite {
 }
 
 function backend {
+    echo "The back end container is currently disabled"
     # Backend container
     # Port: 8080
     # echo -e $YELLOW"### Cleaning backend container"$RESET
@@ -97,10 +97,10 @@ function backend {
         # --name backend \
         # -p 8080:8080 \
         # -d $BACKEND
-   ''
 }
 
 function cdrgenerator {
+    # CDRGenerator container
     if [ -n "$(docker ps | grep cassandra)" ]
     then
       echo "Waiting for port to open"
@@ -115,7 +115,7 @@ function cdrgenerator {
           cass_build=0
       fi
     fi
-    # CDRGenerator container
+
     echo -e $YELLOW"### Cleaning CDRGenerator container"$RESET
     if [[ "$(docker ps | grep cdrgenerator)" ]]; then
         docker stop cdrgenerator
@@ -178,6 +178,20 @@ function frontend {
     fi
 }
 
+function stop_container {
+    # Takes 1 arg, string of container
+    echo -e $RED"Stopping $1"$RESET
+    docker stop "$1"
+}
+
+function clean_container {
+    # Takes 1 arg, string of container
+    echo -e $RED"Stopping $1"$RESET
+    docker stop "$1"
+    echo -e $RED"Removing $1"$RESET
+    docker rm "$1"
+}
+
 function load_order {
     # Be careful when editing the order
     # If you know what you're doing, great.
@@ -187,6 +201,8 @@ function load_order {
     dbconnector
     frontend
  }
+
+# Script entry point
 case "$1"
 in
     "start")
@@ -213,14 +229,54 @@ in
          esac
     ;;
     "stop")
-        echo -e $RED"Stopping containers"$RESET
-        docker stop cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
+        case "$2"
+        in
+            "cass"|"cassandra")
+                stop_container cassandra
+            ;;
+            "cdr"|"cdrgenerator")
+                stop_container cdrgenerator
+            ;;
+            "graphite")
+                stop_container graphite
+            ;;
+            "dbc"|"dbconncetor")
+                stop_container dbconnector
+            ;;
+            "frontend")
+                stop_container frontend
+            ;;
+            *)
+                echo -e $RED"Stopping containers"$RESET
+                docker stop cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
+            ;;
+        esac
     ;;
     "clean")
-        echo -e $RED"Stopping containers"$RESET
-        docker stop cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
-        echo -e $RED"Removing containers"$RESET
-        docker rm cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
+        case "$2"
+        in
+            "cass"|"cassandra")
+                clean_container cassandra
+            ;;
+            "cdr"|"cdrgenerator")
+                clean_container cdrgenerator
+            ;;
+            "graphite")
+                clean_container graphite
+            ;;
+            "dbc"|"dbconncetor")
+                clean_container dbconnector
+            ;;
+            "frontend")
+                clean_container frontend
+            ;;
+            *)
+                echo -e $RED"Stopping containers"$RESET
+                docker stop cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
+                echo -e $RED"Removing containers"$RESET
+                docker rm cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
+            ;;
+        esac
     ;;
     "help"|*)
         echo -e $usage
