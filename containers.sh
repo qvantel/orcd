@@ -3,6 +3,7 @@ if [ "$EUID" -eq 0 ]
 then
     echo "Please don't run the script as root!"
     echo "Remove sudo/exit root user mode."
+    exit 1
 fi
 start=$SECONDS
 
