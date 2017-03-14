@@ -2,33 +2,16 @@ language: bash
 sudo: required
 services:
  - docker
-
 git:
   submodules: true
-
-python:
- - 3.4
-
 before_install:
  # Build the system according to containerfile
  - ./containers.sh start
- 
- # Clean the system with the containerscript
- - ./containers.sh clean
-
- # Build the cassandra image according to the Dockerfile in the Cassandra dir.
- - docker build -t cassandra ./Cassandra
-
- - ./containers.sh start graphite
-
- - ./containers.sh start cdrgenerator
-
- - ./containers.sh start dbconnector
-
 install:
  - sudo pip install nose
-
 script:
- # Integrationtest
+ # Integrationtest "Not working atm"
  #- cd test && ./integration.sh && cd ..
- - sleep 120; cd it-testing && nosetests
+
+# Sleep 100 seconds for the pipeline to have a chance to get up and running
+ - sleep 100; cd test/pipeline && nosetests -v
