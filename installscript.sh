@@ -14,5 +14,8 @@ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89
 sudo apt-get update
 sudo apt-get -y install sbt openjdk-8-jdk
 
+# Npm
+sudo apt-get install -y npm
+
 # Docker
 sudo apt-get install -y docker
