@@ -4,7 +4,8 @@
 
 # Names, paths, configuration.
 cass_container_name=$1
-app_conf_path="src/main/resources/application.conf"
+repo="QvantelCDRGenerator"
+app_conf_path="${repo}/src/main/resources/application.conf"
 batch_limit="gen\.batch\.limit"
 batch_size_limit="gen\.cassandra\.element\.batch\.size"
 cassandra_port="cassandra\.port"
@@ -22,7 +23,9 @@ sed -i "s#${batch_size_limit}\ *\=\ *\-*[0-9]*#${batch_size_limit}\=1#g" "$app_c
 sed -i "s#${cassandra_port}\ *\=\ *\"[0-9]*\"#${cassandra_port}\=\"9043\"#g" "$app_conf_path"
 
 # run
+cd "$repo"
 sbt run
+cd ../
 
 # now look in cassandra and see if there is a record.
 # Use heredoc to send in the use and select statements which will be stored
@@ -50,7 +53,7 @@ then
 fi
 
 # Exit codes
-if [ $has_records -eq 1 ] &&
+if  [ $has_records -eq 1 ] &&
     [ $has_records_call -eq 1 ] &&
     [ $has_records_product -eq 1 ]
 then
