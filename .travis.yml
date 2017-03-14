@@ -1,4 +1,21 @@
 language: bash
+sudo: required
+services:
+ - docker
 
 git:
-  submodules: false
+  submodules: true
+
+before_install:
+ # Build the system according to containerfile
+ - ./containers.sh start
+ 
+ # Clean the system with the containerscript
+ - ./containers.sh clean
+
+ # Build the cassandra image according to the Dockerfile in the Cassandra dir.
+ - docker build -t cassandra ./Cassandra
+
+script:
+ # Integrationtest
+ - cd test && ./integration.sh && cd ..
