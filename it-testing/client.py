@@ -1,5 +1,7 @@
 import json
-from urllib2 import urlopen
+#from urllib2 import urlopen
+from urllib.request import urlopen
+
 
 class Client(object):
     """REST client to work against graphite."""
