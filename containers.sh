@@ -21,31 +21,36 @@ if [[ $OSTYPE == *"darwin"* ]]; then
 fi
 
 # Cassandra
-CASSANDRA_VERSION="3.9"
-CASSANDRA=cassandra:$CASSANDRA_VERSION
+CASSANDRA_NAME="cassandra_qvantel"
+CASSANDRA_VERSION="latest"
+CASSANDRA=$CASSANDRA_NAME:$CASSANDRA_VERSION
 CASSANDRA_PORT=9042
 
 # Graphite
+GRAPHITE_NAME="graphite"
 GRAPHITE_VERSION="0.9.15"
 GRAPHITE=nickstenning/graphite:$GRAPHITE_VERSION
 
 # Backend
+BACKEND_NAME="backend"
 BACKEND_VERSION="latest"
-BACKEND=backend:$BACKEND_VERSION
+BACKEND=$BACKEND_NAME:$BACKEND_VERSION
 
 # CDRGenerator
+CDRGENERATOR_NAME="cdrgenerator"
 CDRGENERATOR_VERSION="latest"
-CDRGENERATOR=cdrgenerator:$CDRGENERATOR_VERSION
-CDRGENERATOR_CONTAINER_NAME="cdrgenerator"
+CDRGENERATOR=$CDRGENERATOR_NAME:$CDRGENERATOR_VERSION
 
 
 # DBConnector
+DBCONNECTOR_NAME="dbconnector"
 DBCONNECTOR_VERSION="latest"
-DBCONNECTOR=dbconnector:$DBCONNECTOR_VERSION
+DBCONNECTOR=$DBCONNECTOR_NAME:$DBCONNECTOR_VERSION
 
-# Grafana
-GRAFANA_VERSION="4.1.1"
-GRAFANA=grafanacustom:$GRAFANA_VERSION
+# Frontend
+FRONTEND_NAME="frontend"
+FRONTEND_VERSION="latest"
+FRONTEND=$FRONTEND_NAME:$FRONTEND_VERSION
 
 usage="Usage: [start|stop|clean|help]
               start [(cass|cassandra)|(cdr|cdrgenerator)|graphite|(dbc|dbconnector)|frontend|"
@@ -53,38 +58,38 @@ usage="Usage: [start|stop|clean|help]
 GRAFANA_VOLUME_TARGET=$HOME/grafana
 CASSANDRA_VOLUME_TARGET=$HOME/cassandra
 
+cass_build=0
 function cassandra {
     # Cassandra container
     # Port: 9042
-    if [ ! "$(docker ps --all | grep cassandra)" ]; then
+    if [ ! "$(docker ps --all | grep $CASSANDRA_NAME)" ]; then
         echo -e $YELLOW"### Creating cassandra container"$RESET
-        docker build -t cassandra ./Cassandra
+        docker build -t $CASSANDRA_NAME ./Cassandra
         docker run \
             --restart=always \
-            --name cassandra \
+            --name $CASSANDRA_NAME \
             -p $CASSANDRA_PORT:$CASSANDRA_PORT \
-            -d cassandra
-        export cass_build=1
+            -d $CASSANDRA
+        cass_build=1
     else
         echo -e $GREEN"### Restarting cassandra container"$RESET
-        docker restart cassandra
-        export cass_build=0
+        docker restart $CASSANDRA_NAME
     fi
 }
 
 function graphite {
         # Graphite container
         # Ports: Receive=2003, WebApp=2000
-        if [ ! "$(docker ps --all | grep graphite)" ]; then
+        if [ ! "$(docker ps --all | grep $GRAPHITE_NAME)" ]; then
             echo -e $YELLOW"### Creating graphite container"$RESET
             docker run \
                 --restart=always \
-                --name graphite \
+                --name $GRAPHITE_NAME \
                 -p 2003:2003 -p 2000:80 \
                 -d $GRAPHITE
         else
             echo -e $GREEN"### Restarting graphite container"$RESET
-            docker restart graphite
+            docker restart $GRAPHITE_NAME
         fi
 }
 
@@ -93,11 +98,8 @@ function backend {
     # Backend container
     # Port: 8080
     # echo -e $YELLOW"### Cleaning backend container"$RESET
-    # if [[ "$(docker ps | grep backend)" ]]; then
-    #     docker stop backend
-    # fi
-    # if [[ "$(docker ps --all | grep backend)" ]]; then
-    #     docker rm backend
+    # if [[ "$(docker ps -all | grep $BACKEND_NAME)" ]]; then
+    #     clean_container $BACKEND_NAME
     # fi
     # if [[ "$(docker images -q $BACKEND 2> /dev/null)" == "" ]]; then
     #     docker rmi $BACKEND
@@ -105,99 +107,94 @@ function backend {
     # echo -e $YELLOW"### Compiling backend container"$RESET
     # (cd ./QvantelBackend; sbt assembly)
     # echo -e $YELLOW"### Building backend container"$RESET
-    # docker build -t backend ./QvantelBackend
+    # docker build -t $BACKEND_NAME ./QvantelBackend
     # echo -e $GREEN"### Starting backend container"$RESET
     # docker run \
         # --restart=always \
-        # --name backend \
+        # --name $BACKEND_NAME \
         # -p 8080:8080 \
         # -d $BACKEND
 }
 
 function cdrgenerator {
     # CDRGenerator container
-    if [ -n "$(docker ps | grep cassandra)" ]
+    if [ -n "$(docker ps | grep $CASSANDRA_NAME)" ]
     then
-      echo "Waiting for port to open"
-      while [ -n "$(docker exec -it cassandra cqlsh -e exit 2>&1 | grep '\(e\|E\)rror')" ]
-      do
-        sleep 1
-      done
-      echo "Cqlsh is up and running"
-      if [ "$cass_build" -eq 1 ]; then
-          echo "Running schema"
-          docker exec -it cassandra cqlsh -f /schema.cql
-          cass_build=0
-      fi
+        echo "Waiting for port to open"
+        while [ -n "$(docker exec -it $CASSANDRA_NAME cqlsh -e exit 2>&1 | grep '\(e\|E\)rror')" ]
+        do
+            sleep 0.1
+        done
+        echo "Cqlsh is up and running"
+        if [ "$cass_build" -eq 1 ]; then
+            echo "Running schema"
+            docker exec -it $CASSANDRA_NAME cqlsh -f /schema.cql
+            cass_build=0
+        fi
     fi
 
-    echo -e $YELLOW"### Cleaning CDRGenerator container"$RESET
-    if [[ "$(docker ps | grep $CDRGENERATOR)" ]]; then
-        docker stop $CDRGENERATOR_CONTAINER_NAME
-    fi
-    if [[ "$(docker ps --all | grep $CDRGENERATOR)" ]]; then
-        docker rm $CDRGENERATOR_CONTAINER_NAME
+    if [[ "$(docker ps --all | grep $CDRGENERATOR_NAME)" ]]; then
+    	echo -e $YELLOW"### Cleaning CDRGenerator container"$RESET
+	clean_container $CDRGENERATOR_NAME
     fi
     if [[ "$(docker images -q $CDRGENERATOR 2> /dev/null)" == "" ]]; then
-        docker rmi $CDRGENERATOR_CONTAINER_NAME
+        docker rmi $CDRGENERATOR_NAME
     fi
     echo -e $YELLOW"### Compiling CDRGenerator container"$RESET
     (cd ./QvantelCDRGenerator; sbt assembly)
+    
     echo -e $YELLOW"### Building CDRGenerator container"$RESET
     docker build -t $CDRGENERATOR ./QvantelCDRGenerator
+    
     echo -e $GREEN"### Starting CDRGenerator container"$RESET
     docker run $DOCKER_OPTS \
-    --restart=always \
-    --net=host \
-    --name cdrgenerator \
-    -d $CDRGENERATOR
+        --restart=always \
+        --net=host \
+        --name $CDRGENERATOR_NAME \
+        -d $CDRGENERATOR
 }
 
 function dbconnector {
-	# DBConnector container
-    echo -e $YELLOW"### Cleaning DBConnector container"$RESET
-    if [[ "$(docker ps | grep dbconnector)" ]]; then
-        docker stop dbconnector
-    fi
-    if [[ "$(docker ps --all | grep dbconnector)" ]]; then
-        docker rm dbconnector
+    # DBConnector container
+    if [[ "$(docker ps --all | grep $DBCONNECTOR_NAME)" ]]; then
+        echo -e $YELLOW"### Cleaning DBConnector container"$RESET
+	clean_container $DBCONNECTOR_NAME
     fi
     if [[ "$(docker images -q $DBCONNECTOR 2> /dev/null)" == "" ]]; then
         docker rmi $DBCONNECTOR
     fi
+    
     echo -e $YELLOW"### Compiling DBConnector container"$RESET
     (cd ./QvantelDBConnector; sbt assembly)
+    
     echo -e $YELLOW"### Building DBConnector container"$RESET
-    docker build -t dbconnector ./QvantelDBConnector
+    docker build -t $DBCONNECTOR_NAME ./QvantelDBConnector
+    
     echo -e $GREEN"### Starting DBConnector container"$RESET
-    # If run on a Mac, add moby host
     docker run $DOCKER_OPTS \
         --restart=always \
         --net=host \
-        --name dbconnector \
-        -d $DBCONNECTOR
+        --name $DBCONNECTOR_NAME \
+        -d $DBCONNECTOR_NAME
 }
 
 function frontend {
     # Frontend container
     # Port: 3000
-    echo -e $YELLOW"### Cleaning QvantelFrontend container"$RESET
-    if [[ "$(docker ps | grep frontend)" ]]; then
-        docker stop frontend
-    fi
-    if [[ "$(docker ps --all | grep frontend)" ]]; then
-        docker rm frontend
+    if [[ "$(docker ps --all | grep $FRONTEND_NAME)" ]]; then
+        echo -e $YELLOW"### Cleaning QvantelFrontend container"$RESET
+	clean_container $FRONTEND_NAME
     fi
 
     echo -e $YELLOW"### Creating frontend container"$RESET
-    npm --prefix QvantelFrontend run build
-    docker build -t $GRAFANA ./QvantelFrontend
+    npm --prefix ./QvantelFrontend run build
+    docker build -t $FRONTEND_NAME ./QvantelFrontend
 
     echo -e $GREEN"### Starting QvantelFrontend container"$RESET
-    docker run --name frontend \
+    docker run --name $FRONTEND_NAME \
         --restart=always \
         -p 3000:3000 \
-        -d $GRAFANA
+        -d $FRONTEND_NAME
 }
 
 function stop_container {
@@ -209,9 +206,9 @@ function stop_container {
 function clean_container {
     # Takes 1 arg, string of container
     echo -e $RED"Stopping $1"$RESET
-    docker stop "$1"
+    docker stop "$1" &> /dev/null
     echo -e $RED"Removing $1"$RESET
-    docker rm "$1"
+    docker rm "$1" &> /dev/null
 }
 
 function load_order {
@@ -239,14 +236,18 @@ in
             "graphite")
                 graphite
             ;;
-            "dbc"|"dbconncetor")
+            "dbc"|"dbconnector")
                 dbconnector
             ;;
             "frontend")
                 frontend
             ;;
             *)
-                load_order
+                if [ -z "$2" ]; then
+                    load_order
+                else
+                    echo $RED"There's no target container named $2"$RESET
+                fi
             ;;
          esac
     ;;
@@ -254,23 +255,30 @@ in
         case "$2"
         in
             "cass"|"cassandra")
-                stop_container cassandra
+                stop_container $CASSANDRA_NAME
             ;;
             "cdr"|"cdrgenerator")
-                stop_container cdrgenerator
+                stop_container $CDRGENERATOR_NAME
             ;;
             "graphite")
-                stop_container graphite
+                stop_container $GRAPHITE_NAME
             ;;
-            "dbc"|"dbconncetor")
-                stop_container dbconnector
+            "dbc"|"dbconnector")
+                stop_container $DBCONNECTOR_NAME
+            ;;
+            "backend")
+                stop_container $BACKEND_NAME
             ;;
             "frontend")
-                stop_container frontend
+                stop_container $FRONTEND_NAME
             ;;
             *)
-                echo -e $RED"Stopping containers"$RESET
-                docker stop cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
+                if [ -z "$2" ]; then
+                    echo -e $RED"Stopping containers"$RESET
+                    docker stop $CASSANDRA_NAME $GRAPHITE_NAME $CDRGENERATOR_NAME $DBCONNECTOR_NAME $FRONTEND_NAME > /dev/null
+                else
+                    echo $RED"There's no target container named $2"$RESET
+                fi
             ;;
         esac
     ;;
@@ -278,25 +286,32 @@ in
         case "$2"
         in
             "cass"|"cassandra")
-                clean_container cassandra
+                clean_container $CASSANDRA_NAME
             ;;
             "cdr"|"cdrgenerator")
-                clean_container cdrgenerator
+                clean_container $CDRGENERATOR_NAME
             ;;
             "graphite")
-                clean_container graphite
+                clean_container $GRAPHITE_NAME
             ;;
-            "dbc"|"dbconncetor")
-                clean_container dbconnector
+            "dbc"|"dbconnector")
+                clean_container $DBCONNECTOR_NAME
+            ;;
+            "backend")
+                clean_container $BACKEND_NAME
             ;;
             "frontend")
-                clean_container frontend
+                clean_container $FRONTEND_NAME
             ;;
             *)
-                echo -e $RED"Stopping containers"$RESET
-                docker stop cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
-                echo -e $RED"Removing containers"$RESET
-                docker rm cassandra graphite backend cdrgenerator dbconnector frontend > /dev/null
+                if [ -z "$2" ]; then
+                    echo -e $RED"Stopping containers"$RESET
+                    docker stop $CASSANDRA_NAME $GRAPHITE_NAME $CDRGENERATOR_NAME $DBCONNECTOR_NAME $FRONTEND_NAME > /dev/null
+                    echo -e $RED"Removing containers"$RESET
+                    docker rm $CASSANDRA_NAME $GRAPHITE_NAME $CDRGENERATOR_NAME $DBCONNECTOR_NAME $FRONTEND_NAME > /dev/null
+                else
+                    echo $RED"There's no target container named $2"$RESET
+                fi
             ;;
         esac
     ;;
