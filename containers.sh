@@ -45,7 +45,7 @@ DBCONNECTOR=dbconnector:$DBCONNECTOR_VERSION
 
 # Grafana
 GRAFANA_VERSION="4.1.1"
-GRAFANA=grafana/grafana:$GRAFANA_VERSION
+GRAFANA=grafanacustom:$GRAFANA_VERSION
 
 usage="Usage: [start|stop|clean|help]
               start [(cass|cassandra)|(cdr|cdrgenerator)|graphite|(dbc|dbconnector)|frontend|"
@@ -181,17 +181,23 @@ function dbconnector {
 function frontend {
     # Frontend container
     # Port: 3000
-    if [ ! "$(docker ps --all | grep frontend)" ]; then
-        echo -e $YELLOW"### Creating frontend container"$RESET
-        docker run --name frontend \
-            --restart=always \
-            -p 3000:3000 \
-            -v $GRAFANA_VOLUME_TARGET:/var/lib/grafana \
-            -d $GRAFANA
-    else
-        echo -e $GREEN"### Restarting frontend container"$RESET
-        docker restart frontend
+    echo -e $YELLOW"### Cleaning QvantelFrontend container"$RESET
+    if [[ "$(docker ps | grep frontend)" ]]; then
+        docker stop frontend
     fi
+    if [[ "$(docker ps --all | grep frontend)" ]]; then
+        docker rm frontend
+    fi
+
+    echo -e $YELLOW"### Creating frontend container"$RESET
+    npm --prefix QvantelFrontend run build
+    docker build -t $GRAFANA ./QvantelFrontend
+
+    echo -e $GREEN"### Starting QvantelFrontend container"$RESET
+    docker run --name frontend \
+        --restart=always \
+        -p 3000:3000 \
+        -d $GRAFANA
 }
 
 function stop_container {
