@@ -16,6 +16,7 @@ sudo apt-get -y install sbt openjdk-8-jdk
 
 # Npm
 sudo apt-get install -y npm
+sudo npm install -g grunt
 
 # Docker
 sudo apt-get install -y docker
