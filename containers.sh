@@ -13,6 +13,13 @@ YELLOW=$(tput setaf 3)
 CYAN=$(tput setaf 6)
 RESET=$(tput sgr0)
 
+# Docker opts
+# If run on a Mac, add moby host
+DOCKER_OPTS=""
+if [[ $OSTYPE == *"darwin"* ]]; then
+    DOCKER_OPTS=$DOCKER_OPTS" --add-host=moby:127.0.0.1"
+fi
+
 # Cassandra
 CASSANDRA_VERSION="3.9"
 CASSANDRA=cassandra:$CASSANDRA_VERSION
@@ -26,9 +33,11 @@ GRAPHITE=nickstenning/graphite:$GRAPHITE_VERSION
 BACKEND_VERSION="latest"
 BACKEND=backend:$BACKEND_VERSION
 
-# DBConnector
+# CDRGenerator
 CDRGENERATOR_VERSION="latest"
 CDRGENERATOR=cdrgenerator:$CDRGENERATOR_VERSION
+CDRGENERATOR_CONTAINER_NAME="cdrgenerator"
+
 
 # DBConnector
 DBCONNECTOR_VERSION="latest"
@@ -123,25 +132,25 @@ function cdrgenerator {
     fi
 
     echo -e $YELLOW"### Cleaning CDRGenerator container"$RESET
-    if [[ "$(docker ps | grep cdrgenerator)" ]]; then
-        docker stop cdrgenerator
+    if [[ "$(docker ps | grep $CDRGENERATOR)" ]]; then
+        docker stop $CDRGENERATOR_CONTAINER_NAME
     fi
-    if [[ "$(docker ps --all | grep cdrgenerator)" ]]; then
-        docker rm cdrgenerator
+    if [[ "$(docker ps --all | grep $CDRGENERATOR)" ]]; then
+        docker rm $CDRGENERATOR_CONTAINER_NAME
     fi
     if [[ "$(docker images -q $CDRGENERATOR 2> /dev/null)" == "" ]]; then
-        docker rmi $CDRGENERATOR
+        docker rmi $CDRGENERATOR_CONTAINER_NAME
     fi
     echo -e $YELLOW"### Compiling CDRGenerator container"$RESET
     (cd ./QvantelCDRGenerator; sbt assembly)
     echo -e $YELLOW"### Building CDRGenerator container"$RESET
-    docker build -t cdrgenerator ./QvantelCDRGenerator
+    docker build -t $CDRGENERATOR ./QvantelCDRGenerator
     echo -e $GREEN"### Starting CDRGenerator container"$RESET
-    docker run \
-        --restart=always \
-        --net=host \
-        --name cdrgenerator \
-        -d $CDRGENERATOR
+    docker run $DOCKER_OPTS \
+    --restart=always \
+    --net=host \
+    --name cdrgenerator \
+    -d $CDRGENERATOR
 }
 
 function dbconnector {
@@ -161,7 +170,8 @@ function dbconnector {
     echo -e $YELLOW"### Building DBConnector container"$RESET
     docker build -t dbconnector ./QvantelDBConnector
     echo -e $GREEN"### Starting DBConnector container"$RESET
-    docker run \
+    # If run on a Mac, add moby host
+    docker run $DOCKER_OPTS \
         --restart=always \
         --net=host \
         --name dbconnector \
