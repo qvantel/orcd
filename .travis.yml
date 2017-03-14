@@ -13,5 +13,5 @@ script:
  # Integrationtest "Not working atm"
  #- cd test && ./integration.sh && cd ..
 
-# Sleep 100 seconds for the pipeline to have a chance to get up and running
- - sleep 100; cd test/pipeline && nosetests -v
+# Sleep 70 seconds for the pipeline to have a chance to get up and running
+ - sleep 70; cd test/pipeline && nosetests -v
