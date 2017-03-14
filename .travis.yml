@@ -31,4 +31,4 @@ install:
 script:
  # Integrationtest
  #- cd test && ./integration.sh && cd ..
- - sleep 60; cd it-testing && nosetests 
+ - sleep 60; cd it-testing && python3 -m "nose"
