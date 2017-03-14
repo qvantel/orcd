@@ -7,7 +7,7 @@ git:
   submodules: true
 
 before_install:
- - ./containers clean
+ - ./containers.sh clean
  - docker build -t cassandra ./Cassandra
 
 script:
