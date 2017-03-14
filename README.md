@@ -12,7 +12,7 @@ Containers:
 - Graphite/Carbon
 - REST backend
 
-**Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozed Miljak and Martin Svensson
+**Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozef Miljak and Martin Svensson
 
 ### Frontend
 
