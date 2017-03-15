@@ -1,8 +1,11 @@
 #! /bin/bash
 
 # Check that the distro is debian based
-if [ ! -f /etc/debian_version ]; then
-	echo "This script is only supported on debian-based linux distributions"
+ubuntu=0
+cat /etc/os-release | grep -q ubuntu && ubuntu=1
+if [ "$ubuntu" -ne 1 ]; then
+	echo "This script is only supported on ubuntu-based linux distributions"
+	exit 1
 fi
 
 # Tools
