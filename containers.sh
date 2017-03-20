@@ -106,22 +106,22 @@ function backend {
     # Backend container
     # Port: 8080
     # echo -e $YELLOW"### Cleaning backend container"$RESET
-    # if [[ "$(docker ps -all | grep $BACKEND_NAME)" ]]; then
-    #     clean_container $BACKEND_NAME
+    # if [[ "$(docker ps -all | grep $BACKEND_CONTAINER_NAME)" ]]; then
+    #     clean_container $BACKEND_CONTAINER_NAME
     # fi
-    # if [[ "$(docker images -q $BACKEND 2> /dev/null)" == "" ]]; then
-    #     docker rmi $BACKEND
+    # if [[ "$(docker images -q $BACKEND_IMAGE_NAME 2> /dev/null)" == "" ]]; then
+    #     docker rmi $BACKEND_IMAGE
     # fi
     # echo -e $YELLOW"### Compiling backend container"$RESET
     # (cd ./QvantelBackend; sbt assembly)
     # echo -e $YELLOW"### Building backend container"$RESET
-    # docker build -t $BACKEND_NAME ./QvantelBackend
+    # docker build -t $BACKEND_IMAGE_NAME ./QvantelBackend
     # echo -e $GREEN"### Starting backend container"$RESET
     # docker run \
         # --restart=always \
-        # --name $BACKEND_NAME \
+        # --name $BACKEND_CONTAINER_NAME \
         # -p 8080:8080 \
-        # -d $BACKEND
+        # -d $BACKEND_IMAGE
 }
 
 function cdrgenerator {
