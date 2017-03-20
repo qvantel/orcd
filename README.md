@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/flygare/Qvantel.svg?token=B6YLB31LLNNKsSzKXpCe&branch=master)](https://travis-ci.com/flygare/Qvantel)
+
 Qvantel
 =======
 
@@ -12,7 +14,7 @@ Containers:
 - Graphite/Carbon
 - REST backend
 
-**Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozed Miljak and Martin Svensson
+**Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozef Miljak and Martin Svensson
 
 ### Frontend
 

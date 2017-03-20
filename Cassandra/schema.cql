@@ -76,3 +76,14 @@ PRIMARY KEY (id, created_at)
 )
 WITH CLUSTERING ORDER BY (created_at ASC)
 ;
+
+CREATE TABLE IF NOT EXISTS qvantel.products(
+id uuid,
+name text,
+PRIMARY KEY (id)
+);
+
+INSERT INTO qvantel.products(id, name) VALUES (uuid(), 'Data plan normal')
+INSERT INTO qvantel.products(id, name) VALUES (uuid(), 'Data plan extra')
+INSERT INTO qvantel.products(id, name) VALUES (uuid(), 'Data plan world')
+

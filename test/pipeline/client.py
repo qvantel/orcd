@@ -1,6 +1,5 @@
 import json
-#from urllib2 import urlopen
-from urllib.request import urlopen
+from urllib2 import urlopen
 
 
 class Client(object):
