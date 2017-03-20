@@ -67,7 +67,7 @@ cass_build=0
 function cassandra {
     # Cassandra container
     # Port: 9042
-    if [[ "$(docker images -q $CASSANDRA_IMAGE_NAME 2> /dev/null)" == "" ]]; then
+    if [[ -z "$(docker images -q $CASSANDRA_IMAGE_NAME 2> /dev/null)" ]]; then
         echo -e $YELLOW"### Creating cassandra container"$RESET
         docker build -t $CASSANDRA_IMAGE_NAME ./Cassandra
     fi
@@ -148,7 +148,7 @@ function cdrgenerator {
     	echo -e $YELLOW"### Cleaning CDRGenerator container"$RESET
 	clean_container $CDRGENERATOR_CONTAINER_NAME
     fi
-    if [[ "$(docker images -q $CDRGENERATOR 2> /dev/null)" == "" ]]; then
+    if [[ -z "$(docker images -q $CDRGENERATOR 2> /dev/null)" ]]; then
         docker rmi $CDRGENERATOR_IMAGE
     fi
     echo -e $YELLOW"### Compiling CDRGenerator container"$RESET
@@ -171,7 +171,7 @@ function dbconnector {
         echo -e $YELLOW"### Cleaning DBConnector container"$RESET
 	clean_container $DBCONNECTOR_CONTAINER_NAME
     fi
-    if [[ $(docker images -q $DBCONNECTOR_IMAGE_NAME 2> /dev/null) == "" ]]; then
+    if [[ -z $(docker images -q $DBCONNECTOR_IMAGE_NAME 2> /dev/null) ]]; then
         echo -e $YELLOW"### Cleaning DBConnector image"$RESET
         docker rmi $DBCONNECTOR_IMAGE
     fi
@@ -197,7 +197,7 @@ function frontend {
         echo -e $YELLOW"### Cleaning frontend container"$RESET
 	clean_container $FRONTEND_CONTAINER_NAME
     fi
-    if [[ "$(docker images -q $FRONTEND_IMAGE_NAME 2> /dev/null)" == "" ]]; then
+    if [[ -z "$(docker images -q $FRONTEND_IMAGE_NAME 2> /dev/null)" ]]; then
         echo -e $YELLOW"### Cleaning frontend image"$RESET
         docker rmi $FRONTEND_IMAGE_NAME
     fi
