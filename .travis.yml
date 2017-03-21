@@ -1,9 +1,19 @@
-language: bash
+# Meta
+language:
+ - bash
+ - scala
 sudo: required
 services:
  - docker
 git:
   submodules: true
+
+# Scala/JDK settings
+scala: 2.11.8
+env: 
+- JDK=oraclejdk8
+jdk:
+- oraclejdk8
 
 before_install:
  # Build the system according to containerfile
