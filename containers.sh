@@ -178,7 +178,7 @@ function dbconnector {
         echo -e $YELLOW"### Cleaning DBConnector container"$RESET
 	clean_container $DBCONNECTOR_CONTAINER_NAME
     fi
-    if [[ -z $(docker images -q $DBCONNECTOR_IMAGE_NAME 2> /dev/null) ]]; then
+    if [[ -z "$(docker images -q $DBCONNECTOR_IMAGE_NAME 2> /dev/null)" ]]; then
         echo -e $YELLOW"### Cleaning DBConnector image"$RESET
         docker rmi $DBCONNECTOR_IMAGE
     fi
@@ -247,7 +247,7 @@ function load_order {
  }
 
 function verify_containers {
-    containers=("$CASSANDRA_CONTAINER_NAME $GRAPHITE_CONTAINER_NAME $DBCONNECTOR_CONTAINER_NAME $FRONTEND_CONTAINER_NAME $CDRGENERATOR_CONTAINER_NAME")
+    containers=("$CASSANDRA_CONTAINER_NAME $GRAPHITE_CONTAINER_NAME $CDRGENERATOR_CONTAINER_NAME $DBCONNECTOR_CONTAINER_NAME $FRONTEND_CONTAINER_NAME")
 
     for container in $containers
     do
