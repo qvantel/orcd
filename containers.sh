@@ -80,7 +80,7 @@ function graphite {
             docker run \
                 --restart=always \
                 --name graphite \
-                -p 2003:2003 -p 2000:80 \
+                -p 2003:2003/udp -p 2003:2003/tcp -p 2000:80 \
                 -d $GRAPHITE
         else
             echo -e $GREEN"### Restarting graphite container"$RESET
