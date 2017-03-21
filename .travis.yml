@@ -23,6 +23,7 @@ install:
  - . $HOME/.nvm/nvm.sh
  - nvm install stable
  - nvm use stable
+ - sudo apt-get install npm
  - sudo npm install -g grunt
 
 script:
