@@ -8,13 +8,22 @@ git:
 
 install:
  - sudo pip install nose
-   # Sbt and Java
+   # OpenJDK 8
+ - sudo add-apt-repository ppa:openjdk-r/ppa
  - sudo apt-get update
- - sudo apt-get -y install sbt openjdk-8
+ - sudo apt-get install openjdk-8-jdk
+ - sudo update-alternatives --config java
+ - sudo update-alternatives --config javac
+   # Sbt
+ - echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt.list
+ - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+ - sudo apt-get update
+ - sudo apt-get -y install sbt
    # Npm
- - sudo apt-get install -y npm
+ - . $HOME/.nvm/nvm.sh
+ - nvm install stable
+ - nvm use stable
  - sudo npm install -g grunt
-
 
 script:
    # Build and start docker containers
