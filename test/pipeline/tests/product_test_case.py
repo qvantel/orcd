@@ -25,7 +25,7 @@ class ProductTestCase(unittest.TestCase):
         """Testing response of qvantel.product.Dataplanworld."""
         response = self.client.request(format_url_with_target("qvantel.product.Dataplanworld"))
         self.assert_datapoints(response)
-        
+
     def assert_datapoints(self, data):
         for element in data:
             for dp in element['datapoints'][0:3]: # Test the first three "null" values in the array
