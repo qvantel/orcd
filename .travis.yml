@@ -15,3 +15,10 @@ script:
 
 # Sleep 70 seconds for the pipeline to have a chance to get up and running
  - sleep 70; cd test/pipeline && nosetests -v
+
+notifications:
+  slack:
+    rooms:
+      - qvantelteam:8gxTgLDUGGbrGDL12cnPGUjx#general
+    on_failure: always # default: always
+    on_success: change
