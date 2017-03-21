@@ -124,26 +124,32 @@ function backend {
         # -d $BACKEND_IMAGE
 }
 
-function cdrgenerator {
-    # CDRGenerator container
+function verify_cassandra_cdrtables {
     if [ -n "$(docker ps | grep $CASSANDRA_CONTAINER_NAME)" ]
     then
-        echo "Waiting for port to open"
+        echo "Waiting for cassandra port to open"
         while [ -n "$(docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -e exit 2>&1 | grep '\(e\|E\)rror')" ]
         do
             sleep 0.1
         done
         echo "Cqlsh is up and running"
-        if [ "$cass_build" -eq 1 ]; then
+    	if [[ "$(md5sum ./Cassandra/schema.cql)" != "$(cat ./.schema_md5sum 2> /dev/null)" ]]
+	then
             echo "Running schema"
+            docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -e "DROP KEYSPACE qvantel;"
             docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -f /schema.cql
-            cass_build=0
+	    md5sum ./Cassandra/schema.cql > ./.schema_md5sum
         fi
     else
         echo $RED"ERROR: Cassandra container is not running, will not start DBConnector container"$RESET
         exit 1
     fi
+}
 
+
+function cdrgenerator {
+    # CDRGenerator container
+    verify_cassandra_cdrtables
     if [[ "$(docker ps --all | grep $CDRGENERATOR_CONTAINER_NAME)" ]]; then
     	echo -e $YELLOW"### Cleaning CDRGenerator container"$RESET
 	clean_container $CDRGENERATOR_CONTAINER_NAME
@@ -167,6 +173,7 @@ function cdrgenerator {
 
 function dbconnector {
     # DBConnector container
+    verify_cassandra_cdrtables
     if [[ "$(docker ps --all | grep $DBCONNECTOR_CONTAINER_NAME)" ]]; then
         echo -e $YELLOW"### Cleaning DBConnector container"$RESET
 	clean_container $DBCONNECTOR_CONTAINER_NAME
