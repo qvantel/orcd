@@ -1,4 +1,17 @@
 language: bash
-
+sudo: required
+services:
+ - docker
 git:
-  submodules: false
+  submodules: true
+before_install:
+ # Build the system according to containerfile
+ - ./containers.sh start
+install:
+ - sudo pip install nose
+script:
+ # Integrationtest "Not working atm"
+ #- cd test && ./integration.sh && cd ..
+
+# Sleep 70 seconds for the pipeline to have a chance to get up and running
+ - sleep 70; cd test/pipeline && nosetests -v

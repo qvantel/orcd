@@ -11,6 +11,7 @@ Welcome to QvantelStudents2017's documentation!
    :caption: Contents:
 
    project_introduction.rst
+   cassandra_mapping.rst
 
 
 
