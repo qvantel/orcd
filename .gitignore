@@ -4,3 +4,6 @@
 # Editor specific
 *.swp
 *.swo
+
+# Python
+*.pyc
