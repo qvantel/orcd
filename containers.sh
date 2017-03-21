@@ -136,12 +136,12 @@ function verify_cassandra_cdrtables {
     	if [[ "$(md5sum ./Cassandra/schema.cql)" != "$(cat ./.schema_md5sum 2> /dev/null)" ]]
 	then
             echo "Running schema"
-            docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -e "DROP KEYSPACE qvantel;"
+            docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -e "DROP KEYSPACE IF EXISTS qvantel;"
             docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -f /schema.cql
 	    md5sum ./Cassandra/schema.cql > ./.schema_md5sum
         fi
     else
-        echo $RED"ERROR: Cassandra container is not running, will not start DBConnector container"$RESET
+        echo $RED"ERROR: Cassandra container is not running, will not start container"$RESET
         exit 1
     fi
 }
@@ -178,7 +178,7 @@ function dbconnector {
         echo -e $YELLOW"### Cleaning DBConnector container"$RESET
 	clean_container $DBCONNECTOR_CONTAINER_NAME
     fi
-    if [[ -z $(docker images -q $DBCONNECTOR_IMAGE_NAME 2> /dev/null) ]]; then
+    if [[ -z "$(docker images -q $DBCONNECTOR_IMAGE_NAME 2> /dev/null)" ]]; then
         echo -e $YELLOW"### Cleaning DBConnector image"$RESET
         docker rmi $DBCONNECTOR_IMAGE
     fi
@@ -245,6 +245,20 @@ function load_order {
     dbconnector
     frontend
  }
+
+function verify_containers {
+    containers=("$CASSANDRA_CONTAINER_NAME $GRAPHITE_CONTAINER_NAME $CDRGENERATOR_CONTAINER_NAME $DBCONNECTOR_CONTAINER_NAME $FRONTEND_CONTAINER_NAME")
+
+    for container in $containers
+    do
+      if [ -n "$(docker ps | grep $container)" ]; then
+          echo -e $GREEN"$container exists"$RESET
+      else
+          echo -e $RED"$container does not exist"$RESET
+          exit 1
+      fi
+    done
+}
 
 # Script entry point
 case "$1"
@@ -357,6 +371,9 @@ in
                 fi
             ;;
         esac
+    ;;
+    "verify")
+      verify_containers
     ;;
     "help"|*)
         echo -e $usage

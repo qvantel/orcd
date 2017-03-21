@@ -73,8 +73,11 @@ class CallTestCase(unittest.TestCase):
 
     def assert_datapoints(self, data):
         for element in data:
-            for dp in element['datapoints'][0:2]: # Test the first two "null" values in the array
-                self.assertNotEqual(dp[0], None, "Getting null value")
+            all_none = True # All values are None
+            for dp in element['datapoints'][0:5]: # Test the first two "null" values in the array
+                if dp != None:
+                    all_none = False
+            self.assertEqual(all_none, False, "Couldn't find any non-none values in call")
 
 if __name__ == '__main__':
         unittest.main()
