@@ -2,6 +2,7 @@
 language:
  - bash
  - scala
+ - node_js
 sudo: required
 services:
  - docker
@@ -14,6 +15,10 @@ env:
 - JDK=oraclejdk8
 jdk:
 - oraclejdk8
+
+# Node/npm settings
+node_js:
+  - "node"
 
 before_install:
  # Build the system according to containerfile
