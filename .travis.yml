@@ -21,3 +21,4 @@ notifications:
     rooms:
       - qvantelteam:8gxTgLDUGGbrGDL12cnPGUjx#general
     on_failure: always # default: always
+    on_success: never
