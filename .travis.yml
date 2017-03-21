@@ -19,19 +19,16 @@ jdk:
 # Node/npm settings
 node_js:
   - "node"
-
-before_install:
- # Build the system according to containerfile
- - ./containers.sh start
- # Verify containers
- - ./containers.sh verify
+  - "7"
 
 install:
  - sudo pip install nose
 
 script:
- # Integrationtest "Not working atm"
- #- cd test && ./integration.sh && cd ..
-
-# Sleep 70 seconds for the pipeline to have a chance to get up and running
+   # Build and start docker containers
+ - ./containers.sh start
+   # Verify that all containers are running
+ - ./containers.sh verify
+   # Integration test (checks that data goes from CDRGenerator to Graphite)
+   # Sleep 70 seconds for the pipeline to have a chance to get up and running
  - sleep 70; cd test/pipeline && nosetests -v
