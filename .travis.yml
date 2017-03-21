@@ -4,11 +4,16 @@ services:
  - docker
 git:
   submodules: true
+
 before_install:
  # Build the system according to containerfile
  - ./containers.sh start
+ # Verify containers
+ - ./containers.sh verify
+
 install:
  - sudo pip install nose
+
 script:
  # Integrationtest "Not working atm"
  #- cd test && ./integration.sh && cd ..

@@ -246,6 +246,20 @@ function load_order {
     frontend
  }
 
+function verify_containers {
+    containers=("$CASSANDRA_CONTAINER_NAME $GRAPHITE_CONTAINER_NAME $DBCONNECTOR_CONTAINER_NAME $FRONTEND_CONTAINER_NAME $CDRGENERATOR_CONTAINER_NAME")
+
+    for container in $containers
+    do
+      if [ -n "$(docker ps | grep $container)" ]; then
+          echo -e $GREEN"$container exists"$RESET
+      else
+          echo -e $RED"$container does not exist"$RESET
+          exit 1
+      fi
+    done
+}
+
 # Script entry point
 case "$1"
 in
@@ -357,6 +371,9 @@ in
                 fi
             ;;
         esac
+    ;;
+    "verify")
+      verify_containers
     ;;
     "help"|*)
         echo -e $usage
