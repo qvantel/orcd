@@ -63,7 +63,6 @@ usage="Usage: [start|stop|clean|help]
 GRAFANA_VOLUME_TARGET=$HOME/grafana
 CASSANDRA_VOLUME_TARGET=$HOME/cassandra
 
-cass_build=0
 function cassandra {
     # Cassandra container
     # Port: 9042
@@ -78,7 +77,6 @@ function cassandra {
             --name $CASSANDRA_CONTAINER_NAME \
             -p $CASSANDRA_PORT:$CASSANDRA_PORT \
             -d $CASSANDRA_IMAGE
-        cass_build=1
     else
         echo -e $GREEN"### Restarting cassandra container"$RESET
         docker restart $CASSANDRA_CONTAINER_NAME
@@ -191,7 +189,7 @@ function dbconnector {
     
     echo -e $YELLOW"### Compiling DBConnector program"$RESET
     sbt_fail=0
-    (cd ./QvantelDBConnector; sbt assembly)
+    (cd ./QvantelDBConnector; sbt assembly) || sbt_fail=1
     
     if [[ $sbt_fail -ne 0 ]];
     then
@@ -224,7 +222,7 @@ function frontend {
     npm_fail=0
     echo -e $YELLOW"### Building frontend plugins"$RESET
     npm --prefix ./QvantelFrontend run build || npm_fail=1
-    if [[ $npm_fail -eq 1 ]]; then
+    if [[ $npm_fail -ne 0 ]]; then
         echo -e $RED"### Failed to build frontend plugins"$RESET
     else
         echo -e $YELLOW"### Building frontend image"$RESET
