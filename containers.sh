@@ -158,17 +158,23 @@ function cdrgenerator {
         docker rmi $CDRGENERATOR_IMAGE
     fi
     echo -e $YELLOW"### Compiling CDRGenerator container"$RESET
-    (cd ./QvantelCDRGenerator; sbt assembly)
+    sbt_fail=0
+    (cd ./QvantelCDRGenerator; sbt assembly) || sbt_fail=1
     
-    echo -e $YELLOW"### Building CDRGenerator container"$RESET
-    docker build -t $CDRGENERATOR_IMAGE_NAME ./QvantelCDRGenerator
+    if [[ $sbt_fail -ne 0 ]];
+    then
+        echo -e $RED"### Failed to compile CDRGenerator"$RESET
+    else
+        echo -e $YELLOW"### Building CDRGenerator container"$RESET
+        docker build -t $CDRGENERATOR_IMAGE_NAME ./QvantelCDRGenerator
     
-    echo -e $GREEN"### Starting CDRGenerator container"$RESET
-    docker run $DOCKER_OPTS \
-        --restart=always \
-        --net=host \
-        --name $CDRGENERATOR_CONTAINER_NAME \
-        -d $CDRGENERATOR_IMAGE
+        echo -e $GREEN"### Starting CDRGenerator container"$RESET
+        docker run $DOCKER_OPTS \
+            --restart=always \
+            --net=host \
+            --name $CDRGENERATOR_CONTAINER_NAME \
+            -d $CDRGENERATOR_IMAGE
+    fi
 }
 
 function dbconnector {
@@ -184,17 +190,23 @@ function dbconnector {
     fi
     
     echo -e $YELLOW"### Compiling DBConnector program"$RESET
+    sbt_fail=0
     (cd ./QvantelDBConnector; sbt assembly)
     
-    echo -e $YELLOW"### Building DBConnector image"$RESET
-    docker build -t $DBCONNECTOR_IMAGE_NAME ./QvantelDBConnector
+    if [[ $sbt_fail -ne 0 ]];
+    then
+        echo -e $RED"### Failed to compile CDRGenerator"$RESET
+    else
+        echo -e $YELLOW"### Building DBConnector image"$RESET
+        docker build -t $DBCONNECTOR_IMAGE_NAME ./QvantelDBConnector
     
-    echo -e $GREEN"### Starting DBConnector container"$RESET
-    docker run $DOCKER_OPTS \
-        --restart=always \
-        --net=host \
-        --name $DBCONNECTOR_CONTAINER_NAME \
-        -d $DBCONNECTOR_IMAGE
+        echo -e $GREEN"### Starting DBConnector container"$RESET
+        docker run $DOCKER_OPTS \
+            --restart=always \
+            --net=host \
+            --name $DBCONNECTOR_CONTAINER_NAME \
+            -d $DBCONNECTOR_IMAGE
+    fi
 }
 
 function frontend {
@@ -209,17 +221,22 @@ function frontend {
         docker rmi $FRONTEND_IMAGE_NAME
     fi
 
+    npm_fail=0
     echo -e $YELLOW"### Building frontend plugins"$RESET
-    npm --prefix ./QvantelFrontend run build
-    echo -e $YELLOW"### Building frontend image"$RESET
-    docker build -t $FRONTEND_IMAGE_NAME ./QvantelFrontend
+    npm --prefix ./QvantelFrontend run build || npm_fail=1
+    if [[ $npm_fail -eq 1 ]]; then
+        echo -e $RED"### Failed to build frontend plugins"$RESET
+    else
+        echo -e $YELLOW"### Building frontend image"$RESET
+        docker build -t $FRONTEND_IMAGE_NAME ./QvantelFrontend
 
-    echo -e $GREEN"### Starting frontend container"$RESET
-    docker run \
-        --restart=always \
-        -p 3000:3000 \
-        --name $FRONTEND_CONTAINER_NAME \
-        -d $FRONTEND_IMAGE
+        echo -e $GREEN"### Starting frontend container"$RESET
+        docker run \
+            --restart=always \
+            -p 3000:3000 \
+            --name $FRONTEND_CONTAINER_NAME \
+            -d $FRONTEND_IMAGE
+    fi
 }
 
 function stop_container {
