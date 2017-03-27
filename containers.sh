@@ -60,9 +60,6 @@ FRONTEND_CONTAINER_NAME="frontend"
 usage="Usage: [start|stop|clean|help]
               start [(cass|cassandra)|(cdr|cdrgenerator)|graphite|(dbc|dbconnector)|frontend|"
 
-GRAFANA_VOLUME_TARGET=$HOME/grafana
-CASSANDRA_VOLUME_TARGET=$HOME/cassandra
-
 function cassandra {
     # Cassandra container
     # Port: 9042
