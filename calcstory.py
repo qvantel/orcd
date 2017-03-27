@@ -10,8 +10,9 @@ url = 'https://app.asana.com/api/1.0/projects/'+projectId+'/tasks?opt_expand=thi
 headr = {'Authorization': 'Bearer 0/5365430af91365ad8b0df5a4d0a07078'}
 
 #Counters
-completedPoints = 0
-totalPoints = 0
+completedPoints = 0.0
+completedPercentageStr = ''
+totalPoints = 0.0
 unestimatedTasks = 0
 
 #Regex to find a number within parentheses. Dots also allowed e.g (3.4)
@@ -36,7 +37,11 @@ for task in taskList:
     else:
         unestimatedTasks += 1 #If the task did not have an estimation
 
+#Calculate the percentage of completed points
+if (totalPoints > 0):
+    completedPercentageStr = " (" + '%.1f'%(100.0 * completedPoints / totalPoints) + "%)"
+
 #Print the result
 print('Total: ', totalPoints)
-print('Completed: ', completedPoints)
+print('Completed: ', completedPoints, completedPercentageStr)
 print('Amount of unestimated tasks: ', unestimatedTasks)
