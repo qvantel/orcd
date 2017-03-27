@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.com/flygare/Qvantel.svg?token=B6YLB31LLNNKsSzKXpCe&branch=master)](https://travis-ci.com/flygare/Qvantel)
-
 Qvantel
 =======
 

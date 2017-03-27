@@ -1,3 +1,9 @@
+# Schema md5sum
+.schema_md5sum
+
 # Editor specific
 *.swp
 *.swo
+
+# Python
+*.pyc
