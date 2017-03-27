@@ -60,6 +60,7 @@ function cassandra {
         echo -e $YELLOW"### Creating cassandra container"$RESET
         docker build -t cassandra ./Cassandra
         docker run \
+	    --net=host \
             --restart=always \
             --name cassandra \
             -p $CASSANDRA_PORT:$CASSANDRA_PORT \
