@@ -14,6 +14,7 @@ cell_global_identification text
 );
 
 CREATE TYPE qvantel.EventDetails(
+access_point_name text,
 traffic_case text,
 event_type text,
 a_party_number text,
