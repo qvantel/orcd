@@ -63,9 +63,16 @@ usage="Usage: [start|stop|clean|help]
 function cassandra {
     # Cassandra container
     # Port: 9042
-    if [[ -z "$(docker images -q $CASSANDRA_IMAGE_NAME 2> /dev/null)" ]]; then
+    let build=0
+    if  [[ -z "$(docker images -q $CASSANDRA_IMAGE_NAME 2> /dev/null)" ]] || \
+        # If schema file has been updated.
+        [[ "$(md5sum ./Cassandra/schema.cql)" != "$(cat ./.schema_md5sum 2> /dev/null)" ]] || \
+        # No existing cassandra container, even though the schema files does not diff?(AKA Clean)
+        # Force cassandra to re-init.
+        [[ ! "$(docker ps --all | grep $CASSANDRA_CONTAINER_NAME)" ]]; then
         echo -e $YELLOW"### Creating cassandra container"$RESET
         docker build -t $CASSANDRA_IMAGE_NAME ./Cassandra
+        build=1
     fi
     if [ ! "$(docker ps --all | grep $CASSANDRA_CONTAINER_NAME)" ]; then
         echo -e $GREEN"### Starting cassandra container"$RESET
@@ -78,6 +85,7 @@ function cassandra {
         echo -e $GREEN"### Restarting cassandra container"$RESET
         docker restart $CASSANDRA_CONTAINER_NAME
     fi
+    verify_cassandra_cdrtables $build
 }
 
 function graphite {
@@ -120,6 +128,7 @@ function backend {
 }
 
 function verify_cassandra_cdrtables {
+    let force_build=$1 # If building, don't check hashes. BUILD IT!
     if [ -n "$(docker ps | grep $CASSANDRA_CONTAINER_NAME)" ]
     then
         echo "Waiting for cassandra port to open"
@@ -128,12 +137,13 @@ function verify_cassandra_cdrtables {
             sleep 0.1
         done
         echo "Cqlsh is up and running"
-    	if [[ "$(md5sum ./Cassandra/schema.cql)" != "$(cat ./.schema_md5sum 2> /dev/null)" ]]
-	then
+    	if [[ $force_build -eq 1 ]] || [[ "$(md5sum ./Cassandra/schema.cql)" != "$(cat ./.schema_md5sum 2> /dev/null)" ]]
+        then
             echo "Running schema"
             docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -e "DROP KEYSPACE IF EXISTS qvantel;"
             docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -f /schema.cql
-	    md5sum ./Cassandra/schema.cql > ./.schema_md5sum
+            md5sum ./Cassandra/schema.cql > ./.schema_md5sum
+            exit 0
         fi
     else
         echo $RED"ERROR: Cassandra container is not running, will not start container"$RESET
@@ -141,10 +151,19 @@ function verify_cassandra_cdrtables {
     fi
 }
 
+function wait_until_cassandra_is_up {
+    echo "Waiting for cassandra port to open"
+    while [ -n "$(docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -e exit 2>&1 | grep '\(e\|E\)rror')" ]
+    do
+        sleep 0.1
+    done
+    echo "Cqlsh is up and running"
+}
+
 
 function cdrgenerator {
     # CDRGenerator container
-    verify_cassandra_cdrtables
+    wait_until_cassandra_is_up
     if [[ "$(docker ps --all | grep $CDRGENERATOR_CONTAINER_NAME)" ]]; then
     	echo -e $YELLOW"### Cleaning CDRGenerator container"$RESET
 	clean_container $CDRGENERATOR_CONTAINER_NAME
@@ -174,7 +193,7 @@ function cdrgenerator {
 
 function dbconnector {
     # DBConnector container
-    verify_cassandra_cdrtables
+    wait_until_cassandra_is_up
     if [[ "$(docker ps --all | grep $DBCONNECTOR_CONTAINER_NAME)" ]]; then
         echo -e $YELLOW"### Cleaning DBConnector container"$RESET
 	clean_container $DBCONNECTOR_CONTAINER_NAME
