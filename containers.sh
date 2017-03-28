@@ -63,7 +63,7 @@ usage="Usage: [start|stop|clean|help]
 function cassandra {
     # Cassandra container
     # Port: 9042
-    let build=0
+    build=0
     if  [[ -z "$(docker images -q $CASSANDRA_IMAGE_NAME 2> /dev/null)" ]] || \
         # If schema file has been updated.
         [[ "$(md5sum ./Cassandra/schema.cql)" != "$(cat ./.schema_md5sum 2> /dev/null)" ]] || \
@@ -128,15 +128,10 @@ function backend {
 }
 
 function verify_cassandra_cdrtables {
-    let force_build=$1 # If building, don't check hashes. BUILD IT!
+    force_build=$1 # If building, don't check hashes. BUILD IT!
     if [ -n "$(docker ps | grep $CASSANDRA_CONTAINER_NAME)" ]
     then
-        echo "Waiting for cassandra port to open"
-        while [ -n "$(docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -e exit 2>&1 | grep '\(e\|E\)rror')" ]
-        do
-            sleep 0.1
-        done
-        echo "Cqlsh is up and running"
+        wait_until_cassandra_is_up
     	if [[ $force_build -eq 1 ]] || [[ "$(md5sum ./Cassandra/schema.cql)" != "$(cat ./.schema_md5sum 2> /dev/null)" ]]
         then
             echo "Running schema"
