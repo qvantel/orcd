@@ -20,7 +20,7 @@ while true; do
   echo "cassandra.memory.used ${USED_MEM} `date +%s`" | nc ${SERVER} ${PORT}
   echo "cassandra.cpu.usage ${CPU} `date +%s`" | nc ${SERVER} ${PORT}
   echo "cassandra.memory.free ${FREE_MEM} `date +%s`" | nc ${SERVER} ${PORT}
-  echo "cassandra.disk.used ${AVAILABLE_SPACE} `date +%s`" | nc ${SERVER} ${PORT}
+  echo "cassandra.disk.available ${AVAILABLE_SPACE} `date +%s`" | nc ${SERVER} ${PORT}
 
   sleep 2;
 done
