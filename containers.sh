@@ -138,7 +138,6 @@ function verify_cassandra_cdrtables {
             docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -e "DROP KEYSPACE IF EXISTS qvantel;"
             docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -f /schema.cql
             md5sum ./Cassandra/schema.cql > ./.schema_md5sum
-            exit 0
         fi
     else
         echo $RED"ERROR: Cassandra container is not running, will not start container"$RESET
