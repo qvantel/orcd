@@ -48,9 +48,9 @@ sed -i "s#${batch_size_limit}\ *\=\ *\-*[0-9]*#${batch_size_limit}\=1#g" "$app_c
 sed -i "s#${cassandra_port}\ *\=\ *\"[0-9]*\"#${cassandra_port}\=\"${cassandra_it_port}\"#g" "$app_conf_path"
 
 # Verify that our config file is what we want.
-grep -q "${batch_limit}=1" "$app_conf_path" 2>&1 && echo -n "" || { echo "failed 1"; exit 1; }
-grep -q "${batch_size_limit}=1" "$app_conf_path" && echo -n "" ||  { echo "failed 2"; exit 1; }
-grep -q "${cassandra_port}=\"${cassandra_it_port}\"" "$app_conf_path" && echo -n "" || { echo "failed 3"; exit 1; }
+grep -q "${batch_limit}=1" "$app_conf_path" 2>&1 && echo -n "" || { echo "Failed to set batch limit [no success]"; exit 1; }
+grep -q "${batch_size_limit}=1" "$app_conf_path" && echo -n "" ||  { echo "Failed to set batch size limit [no success]"; exit 1; }
+grep -q "${cassandra_port}=\"${cassandra_it_port}\"" "$app_conf_path" && echo -n "" || { echo "Failed to set cassandra port [no success]"; exit 1; }
 
 # Finally, run the jar.
 # Run with timeout

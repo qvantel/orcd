@@ -3,6 +3,7 @@ test -z "$(which docker >/dev/null)" || { echo "Docker command not available"; e
 test -z "$(which sed >/dev/null)" || { echo "Sed not available"; exit 1; }
 test -z "$(which grep >/dev/null)" || { echo "Grep not available"; exit 1; }
 test -z "$(which pushd >/dev/null)" || { echo "Pushd not available"; exit 1; }
+test -z "$(which git >/dev/null)" || { echo "Git not available"; exit 1; }
 
 # This integration test relies on a docker image with the name cassandra
 # Is available. If not, exit 1
