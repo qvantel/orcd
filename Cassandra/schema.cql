@@ -48,12 +48,13 @@ charged_amounts set <frozen <ChargedAmounts>>
 
 CREATE TABLE IF NOT EXISTS qvantel.cdr(
 id uuid,
-created_at timestamp,
-started_at timestamp,
+created_at bigint,
+started_at bigint,
 used_service_units frozen <ServiceUnit>,
 service text,
 event_details frozen <EventDetails>,
 event_charges frozen <EventCharges>,
-PRIMARY KEY (id, created_at)
+clustering_key int,
+PRIMARY KEY ((clustering_key), created_at)
 )
 WITH CLUSTERING ORDER BY (created_at ASC);
