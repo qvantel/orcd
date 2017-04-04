@@ -6,13 +6,15 @@ cass_container_name=$1
 
 # Paths
 repo="QvantelCDRGenerator"
-app_conf_path="src/main/resource/application.conf"
+app_conf_path="src/main/resources/application.conf"
 
 # What in config file needs to be updated(for intgr. test)
 batch_limit="batch\.limit"
 batch_size_limit="cassandra\.element\.batch\.size"
 cassandra_port="port"
 cassandra_it_port=9043
+cassandra_keyspace="qvantel"
+cassandra_cdr_table_name="cdr"
 
 jar_directory="target/scala-2.11/CDRGenerator.jar"
 
@@ -33,7 +35,7 @@ timeout=45
 pushd "../$repo" 2>&1 1>/dev/null
 
 # If there is no file, fail
-[ -f "$app_conf_path" ] || {  echo "No such file: $app_conf_path [no success]"; exit 1; }
+[ -f "$app_conf_path" ] || { echo "No such file: $app_conf_path [no success]"; exit 1; }
 
 # Warn if has already edited.
 [ -z "$(git diff $app_conf_path)" ] || { echo "It appears that the $app_conf_path has already been edited(Checked with git diff). Exiting the test. [no success]"; exit 1; }
@@ -54,7 +56,7 @@ grep -q "${batch_size_limit}=1" "$app_conf_path" && echo -n "" ||  { echo "Faile
 grep -q "${cassandra_port}=\"${cassandra_it_port}\"" "$app_conf_path" && echo -n "" || { echo "Failed to set cassandra port [no success]"; exit 1; }
 
 # Compile CDRGenerator.jar if it doesn't exist.
-if [ ! -f "$jar_directory" ] && sbt assembly
+[ ! -f "$jar_directory" ] && sbt assembly
 
 # Finally, run the jar.
 # Run with timeout
@@ -72,8 +74,8 @@ popd 2>&1 1>/dev/null
 # in the file $temp_cassandra_result_file.
 
 docker exec -i "$cass_container_name" cqlsh << EOF > "$temp_cassandra_result_file"
-use qvantel;
-select count(*) from cdr;
+use $cassandra_keyspace;
+select count(*) from $cassandra_cdr_table_name;
 EOF
 
 # If the query was successful, there should now be a file.
@@ -95,8 +97,7 @@ fi
 # Exit codes
 if [ $has_records_cdr -eq 1 ]
 then
-    echo "[success]"
+    echo '[success]'
 else
-    echo "$has_records"
-    echo "[no success]"
+    echo '[no success]'
 fi

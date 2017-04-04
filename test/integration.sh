@@ -1,5 +1,5 @@
 #!/bin/bash
-test -z "$(which docker >/dev/null)" || { echo "Docker command not available"; exit 1; }
+test -z "$(which docker >/dev/null)" || { echo "Docker not available"; exit 1; }
 test -z "$(which sed >/dev/null)" || { echo "Sed not available"; exit 1; }
 test -z "$(which grep >/dev/null)" || { echo "Grep not available"; exit 1; }
 test -z "$(which pushd >/dev/null)" || { echo "Pushd not available"; exit 1; }
@@ -49,11 +49,12 @@ done
 # Cassandra up, run cqlsh script.
 echo "Running schema"
 docker exec -it "$container_name" cqlsh -f "$schema_file"
+exit 1
 
 # It's up!
 # Run integration test
 echo "Running integration test"
-int_test=$(./cdr-cass.sh "$container_name" 2>&1)
+int_test=$(./cdr_cass_integration_test.sh "$container_name" 2>&1)
 code=$?
 echo "Integration test done"
 
