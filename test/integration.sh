@@ -15,7 +15,6 @@ cass_port="9043"
 
 test -n "$(docker images | grep $container_image_name)" || { echo "Cassandra image not found.)"; exit 1; }
 
-
 function provision_cass_container {
     # Provision a cassandra container.
     if [ -n "$(docker images | grep $container_image_name)" ]

@@ -30,7 +30,6 @@ timeout=45
 # Same, except if not a docker container.
 [ -z "$(docker ps | grep $1)" ] && { echo "The string the argument '$1' provided is not a running container. [no success]"; exit 1; }
 
-
 # Use the stack to navigate to the submodule
 pushd "../$repo" 2>&1 1>/dev/null
 

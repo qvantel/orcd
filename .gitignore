@@ -2,8 +2,10 @@
 .schema_md5sum
 
 # Editor specific
-*.swp
-*.swo
+*.sw*
 
 # Python
 *.pyc
+
+# Tests
+test/target
