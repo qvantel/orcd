@@ -49,7 +49,6 @@ done
 # Cassandra up, run cqlsh script.
 echo "Running schema"
 docker exec -it "$container_name" cqlsh -f "$schema_file"
-exit 1
 
 # It's up!
 # Run integration test
