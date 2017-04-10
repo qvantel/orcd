@@ -132,13 +132,12 @@ function verify_cassandra_cdrtables {
     if [ -n "$(docker ps | grep $CASSANDRA_CONTAINER_NAME)" ]
     then
         wait_until_cassandra_is_up
-    	if [[ $force_build -eq 1 ]] || [[ "$(md5sum ./Cassandra/schema.cql)" != "$(cat ./.schema_md5sum 2> /dev/null)" ]]
+        if [[ $force_build -eq 1 ]] || [[ "$(md5sum ./Cassandra/schema.cql)" != "$(cat ./.schema_md5sum 2> /dev/null)" ]]
         then
             echo "Running schema"
             docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -e "DROP KEYSPACE IF EXISTS qvantel;"
             docker exec -it $CASSANDRA_CONTAINER_NAME cqlsh -f /schema.cql
             md5sum ./Cassandra/schema.cql > ./.schema_md5sum
-            exit 0
         fi
     else
         echo $RED"ERROR: Cassandra container is not running, will not start container"$RESET
