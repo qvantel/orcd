@@ -97,7 +97,7 @@ function graphite {
                 --restart=always \
                 --name $GRAPHITE_CONTAINER_NAME \
                 -p 2003-2004:2003-2004 -p 2000:80 \
-                -p 8125:8125/udp -p 8126:8126 \
+                -p 8125:8125/udp -p 8126:8126 -p 2023-2024:2023-2024 \
                 -d $GRAPHITE_IMAGE
         else
             echo -e $GREEN"### Restarting graphite container"$RESET
