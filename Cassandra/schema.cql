@@ -13,7 +13,8 @@ location_area_identification text,
 cell_global_identification text
 );
 
-CREATE TYPE qvantel.CallEventDetails(
+CREATE TYPE qvantel.EventDetails(
+access_point_name text,
 traffic_case text,
 event_type text,
 a_party_number text,
@@ -21,13 +22,6 @@ is_roaming boolean,
 a_party_location frozen <LocationInformation>,
 b_party_number text,
 b_party_location frozen <LocationInformation>
-);
-
-CREATE TYPE qvantel.DataEventDetails(
-access_point_name text,
-is_roaming boolean,
-a_party_location frozen <LocationInformation>,
-a_party_number text
 );
 
 CREATE TYPE qvantel.Product(
@@ -52,37 +46,15 @@ product frozen <Product>,
 charged_amounts set <frozen <ChargedAmounts>>
 );
 
-CREATE TABLE IF NOT EXISTS qvantel.call(
+CREATE TABLE IF NOT EXISTS qvantel.cdr(
 id uuid,
-created_at timestamp,
-started_at timestamp,
+created_at bigint,
+started_at bigint,
 used_service_units frozen <ServiceUnit>,
 service text,
-event_details frozen <CallEventDetails>,
+event_details frozen <EventDetails>,
 event_charges frozen <EventCharges>,
-PRIMARY KEY (id, created_at)
+clustering_key int,
+PRIMARY KEY ((clustering_key), created_at)
 )
 WITH CLUSTERING ORDER BY (created_at ASC);
-
-CREATE TABLE IF NOT EXISTS qvantel.product(
-id uuid,
-created_at timestamp,
-started_at timestamp,
-used_service_units frozen <ServiceUnit>,
-service text,
-event_details frozen <DataEventDetails>,
-event_charges frozen <EventCharges>,
-PRIMARY KEY (id, created_at)
-)
-WITH CLUSTERING ORDER BY (created_at ASC)
-;
-
-CREATE TABLE IF NOT EXISTS qvantel.products(
-id uuid,
-name text,
-PRIMARY KEY (id)
-);
-
-INSERT INTO qvantel.products(id, name) VALUES (uuid(), 'Data plan normal');
-INSERT INTO qvantel.products(id, name) VALUES (uuid(), 'Data plan extra');
-INSERT INTO qvantel.products(id, name) VALUES (uuid(), 'Data plan world');
