@@ -29,8 +29,8 @@ CASSANDRA_PORT=9042
 
 # Graphite
 GRAPHITE_IMAGE_NAME="graphite"
-GRAPHITE_IMAGE_VERSION="0.9.15"
-GRAPHITE_IMAGE=nickstenning/graphite:$GRAPHITE_IMAGE_VERSION
+GRAPHITE_IMAGE_VERSION="latest" # Using latest is bad and can break,fix
+GRAPHITE_IMAGE=hopsoft/graphite-statsd:$GRAPHITE_IMAGE_VERSION
 GRAPHITE_CONTAINER_NAME="graphite"
 
 # Backend
@@ -96,7 +96,8 @@ function graphite {
             docker run \
                 --restart=always \
                 --name $GRAPHITE_CONTAINER_NAME \
-                -p 2003:2003 -p 2000:80 \
+                -p 2003-2004:2003-2004 -p 2000:80 -p 2023-2024:2023-2024 \
+                -p 8125:8125/udp -p 8126:8126 \
                 -d $GRAPHITE_IMAGE
         else
             echo -e $GREEN"### Restarting graphite container"$RESET
