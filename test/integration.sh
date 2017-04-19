@@ -65,7 +65,7 @@ then
     echo "Integration test successful"
     exit 0
 else
-    echo "Interation test failed"
+    echo "Integration test failed"
     echo "$int_test"
     exit 1
 fi

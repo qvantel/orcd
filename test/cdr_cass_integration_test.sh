@@ -59,7 +59,9 @@ grep -q "${cassandra_port}=\"${cassandra_it_port}\"" "$app_conf_path" && echo -n
 
 # Finally, run the jar.
 # Run with timeout
-timeout $timeout java -Dnetty.epoll.enabled=false -Dconfig.file=$(basename "$app_conf_path") -jar "$jar_directory"
+pwd
+
+timeout $timeout java -Dnetty.epoll.enabled=false -Dconfig.file=$app_conf_path -Dtrends.dir=src/main/resoucers/trends/ -jar "$jar_directory"
 
 # Return the config file as it was.
 echo "Checking out $app_conf_path"
