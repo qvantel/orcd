@@ -58,7 +58,6 @@ git clone https://github.com/flygare/Qvantel.git
 In the root folder, you'll see a script called **containers.sh**. This script manages all the required docker containers in order to maintain the pipeline (CDR -> Cassandra -> DBConnector -> Graphite -> Grafana) (?). This script can **start**, **stop** and **remove** containers. 
 
 To start all the containers run the following command:
-
 ```
 ./containers.sh start
 ```
@@ -69,7 +68,6 @@ To stop all containers:
 ```
 
 To stop and then remove all the containers:
-
 ```
 ./containers.sh clean
 ```
