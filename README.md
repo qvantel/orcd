@@ -87,7 +87,6 @@ The containers maintained by this script are:
 - frontend (Grafana)
 
 However, what we want to do now is to run the start command:
-
 ```
 ./containers.sh start
 ```
