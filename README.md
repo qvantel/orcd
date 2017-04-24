@@ -14,6 +14,8 @@ Containers:
 
 **Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozef Miljak and Martin Svensson
 
+### Frontend
+
 A single Grafana container with a few plugins that fetches data from the graphite docker container.
 
 Plugins:
@@ -24,26 +26,7 @@ Plugins:
 
 ## Sub repositories
 
-This repository contains a subset of repositories needed to run the system.
-
-### Backend
-
-For more information, please refer to the repositories [readme](https://github.com/flygare/QvantelBackend).
-
-### CDR Generator
-
-For more information, please refer to the repositories [readme](https://github.com/flygare/QvantelCDRGenerator).
-
-### Cassandra
-
-For more information, please refer to the repositories [readme](https://github.com/flygare/Qvantel/tree/master/Cassandra).
-
-### DB Connector
-
-For more information, please refer to the repositories [readme](https://github.com/flygare/QvantelDBConnector).
-
-### Frontend
-This repository contains all the Grafana plugins, the plugins that can be found here are the Roaming calls GeoMap and the Service Heatmap. For more information, please refer to the repositories [readme](https://github.com/flygare/QvantelFrontend#qvantel-frontend).
+For more information about each component, please check their git repositories respective README.md
 
 ## Installation
 
@@ -59,10 +42,16 @@ In order to install everything and get it up and running, you'll first need to d
 - NodeJS
 - (?)
 
-When you have installed the dependencies, you'll need to clone this repository:
+This can be done by running the following command for debian based distros:
+```
+./installscript.sh
+```
+
+When you have installed the dependencies, you'll need to clone this repository and fetch the subrepositories:
 
 ```
 git clone https://github.com/flygare/Qvantel.git
+./pullall.sh
 ```
 
 ### The Docker container script
@@ -71,25 +60,25 @@ In the root folder, you'll see a script called **containers.sh**. This script ma
 To start all the containers run the following command:
 
 ```
-./containers start
+./containers.sh start
 ```
 
 To stop all containers:
 ```
-./containers stop
+./containers.sh stop
 ```
 
 To stop and then remove all the containers:
 
 ```
-./containers clean
+./containers.sh clean
 ```
 
 You can also specify a specific container for the three previously mentioned commands:
 ```
-./containers start frontend
-./containers stop frontend
-./containers clean frontend
+./containers.sh start frontend
+./containers.sh stop frontend
+./containers.sh clean frontend
 ```
 
 The containers maintained by this script are:
@@ -102,7 +91,7 @@ The containers maintained by this script are:
 However, what we want to do now is to run the start command:
 
 ```
-./containers start
+./containers.sh start
 ```
 
 This may take a while as it will download, install and startup everything needed within each container. If everything worked as expected, you should have the 5 previously mentioned docker containers up and running.
