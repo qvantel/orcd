@@ -1,0 +1,15 @@
+
+ service
+---------
+     mms
+   voice
+    data
+   voice
+     sms
+    data
+   voice
+   voice
+     sms
+   voice
+
+(10 rows)

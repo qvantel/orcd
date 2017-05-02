@@ -1,0 +1,15 @@
+
+ used_service_units
+---------------------------------------------------------
+   {amount: 406, currency: '', unit_of_measure: 'bytes'}
+   {amount: 849, currency: '', unit_of_measure: 'bytes'}
+ {amount: 937, currency: '', unit_of_measure: 'seconds'}
+ {amount: 429, currency: '', unit_of_measure: 'seconds'}
+ {amount: 25, currency: '', unit_of_measure: 'monetary'}
+ {amount: 829, currency: '', unit_of_measure: 'seconds'}
+   {amount: 241, currency: '', unit_of_measure: 'bytes'}
+ {amount: 415, currency: '', unit_of_measure: 'seconds'}
+  {amount: 58, currency: '', unit_of_measure: 'seconds'}
+   {amount: 782, currency: '', unit_of_measure: 'bytes'}
+
+(10 rows)

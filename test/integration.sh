@@ -52,7 +52,7 @@ docker exec -it "$container_name" cqlsh -f "$schema_file"
 # It's up!
 # Run integration test
 echo "Running integration test"
-int_test=$(./cdr_cass_integration_test.sh "$container_name" 2>&1)
+int_test=$(./cdr_cass_integration_test.sh "cassandra_qvantel" 2>&1)
 code=$?
 echo "Integration test done"
 

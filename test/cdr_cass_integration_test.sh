@@ -12,7 +12,7 @@ app_conf_path="src/main/resources/application.conf"
 batch_limit="batch\.limit"
 batch_size_limit="cassandra\.element\.batch\.size"
 cassandra_port="port"
-cassandra_it_port=9043
+cassandra_it_port=9042
 cassandra_keyspace="qvantel"
 cassandra_cdr_table_name="cdr"
 
@@ -78,7 +78,7 @@ docker exec -i "$cass_container_name" cqlsh << EOF > "$temp_cassandra_result_fil
 use $cassandra_keyspace;
 select count(*) from $cassandra_cdr_table_name;
 EOF
-
+#$cassandra_cdr_table_name;
 # If the query was successful, there should now be a file.
 [ -f $temp_cassandra_result_file ] || { echo "No cassandra result file[no success]"; exit 1; }
 
