@@ -87,8 +87,8 @@ print('\nEstimated total:', totalPoints)
 
 #Points per tag
 for key, value in tags.items():
-    print(key, ': ', value, ' ', getPercentageStr(value, totalPoints))
-print('Other', ': ', other, ' ', getPercentageStr(other, totalPoints))
+    print(key, ':', value, getPercentageStr(value, totalPoints))
+print('Other', ':', other, getPercentageStr(other, totalPoints))
 
 #Completed points
 print('\nCompleted:', completedPoints, completedPercentageStr)
