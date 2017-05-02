@@ -6,7 +6,12 @@ import re
 #HTTP Request data
 #projectId = '278035678015737' #Sprint 1
 #projectId = '297767546500356' #Sprint 2
-projectId = '314287247044636' #Sprint 3
+#projectId = '314287247044636' #Sprint 3
+projectId = '331864384586068' #Sprint 4
+
+# Which tags to compare points for.
+tags = {'Front end': 0, 'Back end': 0, 'Planning': 0}
+other = 0
 
 url = 'https://app.asana.com/api/1.0/projects/'+projectId+'/tasks?opt_expand=this'
 headr = {'Authorization': 'Bearer 0/5365430af91365ad8b0df5a4d0a07078'}
@@ -51,8 +56,16 @@ for task in taskList:
     if(regmatch):
         taskPoints = float(regmatch.group(1))
         totalPoints += taskPoints #Add the estimated points to the total
-        if(task['completed']):
+        if task['completed']:
             completedPoints += taskPoints
+
+        tagExists = False
+        for tag in task['tags']:
+            if tag['name'] in tags:
+                tags[tag['name']] += taskPoints
+                tagExists = True
+        if not tagExists:
+            other += taskPoints
     else:
         unestimatedTasks += 1 #If the task did not have an estimation
 
@@ -71,8 +84,16 @@ effortByEstimationPercentageStr = getPercentageStr(effortPoints, totalPoints)#Ef
 
 #Print the result
 print('\nEstimated total:', totalPoints)
-print('Completed:', completedPoints, completedPercentageStr)
+
+#Points per tag
+for key, value in tags.items():
+    print(key, ': ', value, ' ', getPercentageStr(value, totalPoints))
+print('Other', ': ', other, ' ', getPercentageStr(other, totalPoints))
+
+#Completed points
+print('\nCompleted:', completedPoints, completedPercentageStr)
 print('Amount of unestimated tasks:', unestimatedTasks)
 
+#Effort made
 print('\nEffort made:', effortPoints, effortByEstimationPercentageStr, 'of total estimation')
 print('Effort that turned into finished tasks:', completedEffortPoints, completedEffortPercentageStr)
