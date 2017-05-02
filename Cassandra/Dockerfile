@@ -1,5 +1,5 @@
 # vim:set ft=dockerfile:
-FROM library/cassandra:3.9
+FROM library/cassandra:3.10
 
 EXPOSE 7000 7001 7199 9042 9160
 CMD ["cassandra", "-f"]
