@@ -45,8 +45,7 @@ This can be done by running the following command for debian based distros:
 ```
 ./installscript.sh
 ```
-If you get the error "node is not installed" even though it is.
-It can be worked around by symlinking nodejs to node:
+If you get the error "node is not installed" even though it is; it can be worked around by symlinking nodejs to node:
 ```
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 ```
