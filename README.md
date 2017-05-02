@@ -40,7 +40,6 @@ In order to install everything and get it up and running, you'll first need to d
 - Java
 - NPM
 - NodeJS
-- (?)
 
 This can be done by running the following command for debian based distros:
 ```
