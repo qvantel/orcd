@@ -51,7 +51,6 @@ When you have installed the dependencies, you'll need to clone this repository a
 
 ```
 git clone https://github.com/flygare/Qvantel.git
-./pullall.sh
 ```
 
 ### The Docker container script
