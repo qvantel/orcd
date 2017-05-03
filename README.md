@@ -40,22 +40,24 @@ In order to install everything and get it up and running, you'll first need to d
 - Java
 - NPM
 - NodeJS
-- (?)
 
 This can be done by running the following command for debian based distros:
 ```
 ./installscript.sh
 ```
+If you get the error "node is not installed" even though it is; it can be worked around by symlinking nodejs to node:
+```
+sudo ln -s /usr/bin/nodejs /usr/bin/node
+```
 
 When you have installed the dependencies, you'll need to clone this repository and fetch the subrepositories:
-
 ```
 git clone https://github.com/flygare/Qvantel.git
 ./pullall.sh
 ```
 
 ### The Docker container script
-In the root folder, you'll see a script called **containers.sh**. This script manages all the required docker containers in order to maintain the pipeline (CDR -> Cassandra -> DBConnector -> Graphite -> Grafana) (?). This script can **start**, **stop** and **remove** containers. 
+In the root folder, you'll see a script called **containers.sh**. This script manages all the required docker containers in order to maintain the pipeline (CDR -> Cassandra -> DBConnector -> Graphite -> Grafana) (?). This script can **start**, **stop** and **remove** containers.
 
 To start all the containers run the following command:
 ```
@@ -80,7 +82,7 @@ You can also specify a specific container for the three previously mentioned com
 ```
 
 The containers maintained by this script are:
-- cdrgenerator 
+- cdrgenerator
 - cassandra
 - dbconnector
 - graphite
@@ -97,4 +99,14 @@ This may take a while as it will download, install and startup everything needed
 ### Usage of the system
 If you now navigate to http://localhost:3000 you should access your webserver containing Grafana. You will be greeted with a login screen, you can login with **qvantel** as username and **qvantel** as password. The two plugins contained in the frontend repository (GeoMap and Heatmap) are pre-installed and can be found in their respective pre-set dashboards.
 
-You can also navigate to http://localhost:2000 to directly access your webserver containing Graphite. 
+You can also navigate to http://localhost:2000 to directly access your webserver containing Graphite.
+
+### Testing
+## Unit tests
+For the CDRGenerator and the DBConnector we have implemented various test cases for unit testing.
+
+## Integration tests
+We have some bash scripts that tests the CDRGenerator -> Cassandra -> DBConnector -> Graphite path.
+There is also a python script that tests this pipeline.
+
+All of the integration tests lies in the `test` directory.
