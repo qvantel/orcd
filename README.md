@@ -45,9 +45,12 @@ This can be done by running the following command for debian based distros:
 ```
 ./installscript.sh
 ```
+If you get the error "node is not installed" even though it is; it can be worked around by symlinking nodejs to node:
+```
+sudo ln -s /usr/bin/nodejs /usr/bin/node
+```
 
 When you have installed the dependencies, you'll need to clone this repository and fetch the subrepositories:
-
 ```
 git clone https://github.com/flygare/Qvantel.git
 ./pullall.sh
