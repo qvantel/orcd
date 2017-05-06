@@ -204,7 +204,7 @@ function dbconnector {
     
     if [[ $sbt_fail -ne 0 ]];
     then
-        echo -e $RED"### Failed to compile CDRGenerator"$RESET
+        echo -e $RED"### Failed to compile DBConnector"$RESET
     else
         echo -e $YELLOW"### Building DBConnector image"$RESET
         docker build -t $DBCONNECTOR_IMAGE_NAME ./QvantelDBConnector
