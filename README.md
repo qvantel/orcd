@@ -47,10 +47,17 @@ This can be done by running the following command for debian based distros:
 ./installscript.sh
 ```
 
-When you have installed the dependencies, you'll need to clone this repository and fetch the subrepositories:
+When you have installed the dependencies, you'll need to clone this repository and fetch the subrepositories.
 
+To clone the repository run:
 ```
 git clone https://github.com/flygare/Qvantel.git
+```
+
+To fetch the subrepositories you can run:
+```
+git submodule update --init --recursive --remote
+git submodule foreach -q --recursive 'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch'
 ```
 
 ### The Docker container script
