@@ -22,4 +22,4 @@ sudo apt-get install -y npm
 sudo npm install -g grunt
 
 # Docker
-sudo apt-get install -y docker
+sudo apt-get install -y docker.io
