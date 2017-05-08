@@ -10,35 +10,45 @@ cassandra_port="port"
 cassandra_it_port=9042
 cassandra_keyspace="qvantel"
 cassandra_cdr_table_name="cdr"
-limit="limit"
-
+limit="theLimit"
+tempGraphiteFile="tempGraphiteData.txt"
 jar_directory="target/scala-2.11/DBConnector.jar"
-
-# What file to save result of docker/cassandra query
-temp_cass_service_file="service"
-temp_cass_createdAt_file="createdAt"
-temp_cass_eventDetails_file="eventsDetails"
-temp_cass_usedServiceUnit_file="usedServiceUnet"
 
 # --> Run cdr-cassandra integration test
 echo "Running cdr--> cassandra integration test!"
 #int_test=$(./cdr_cass_integration_test.sh "cassandra_qvantel" 2>&1)
-#code=$?
+
 echo "cdr-->cassandra Integration test done!"
-
-# match "limit=number" and force number to be 1
-echo $limit
+#match "limit=number" and force number to be 1
 pushd ../QvantelDBConnector/
-sed -i "s#${limit}\ *\=\ *\-*[0-9]*#${limit}\=1#g" "$app_conf_path"
+sed -i "s#${limit}\ *\=\ *\-*[0-9]*#${limit}\=5#g" "$app_conf_path"
 
-echo "run dbconnector using sbt run"
+# now running the dbconnector
+echo "running dbconnector using sbt run"
 sbt run
-echo "now we are running sbt to start the dbconnector."
 
+# now change the app.config file to its origin
+sed -i "s#${limit}\ *\=\ *\-*[0-9]*#${limit}\=-1#g" "$app_conf_path"
 
-#popd
-#pwd
+# back to the directory you were in at start
+popd
 
+#now run curl to check if the data is at graphite. in this case we are lookng att callplan
+curl '127.0.0.1:2000/render?target=qvantel.product.voice.CallPlanNormal&format=json' -o $tempGraphiteFile
 
-#rm "$temp_cass_result_file"
-echo "now deleting file...."
+#check if the file contain data by
+# Read from file and grep for rows.
+#echo ${grep -Fxq "\[\]" $tempGraphiteFile}
+if grep -Fxq "[]" $tempGraphiteFile
+then
+#there are no records in this file
+echo "the dbconnector integration test failed!"
+echo "[-failed-]"
+else
+#there are records in this file
+echo "dbconnector integration test is done and successfull"
+echo "[-success-]"
+fi
+
+#now remove the temp file 
+rm -f $tempGraphiteFile

@@ -58,14 +58,29 @@ echo "Integration test done"
 
 # Test is done
 deallocate_cass_container
+#run dbconnector integration test
+echo "running dbconnector integration test"
+dbc_inte_test=$(./dbcIntegrationTest.sh 2>&1)
+result=$
+echo "dbconnector integration test done"
 
 # Finally, report back
 if [ -n "$(echo $int_test | grep '[SUCCESS]')" ] && [ $code -eq 0 ]
 then
-    echo "Integration test successful"
+    echo "cdr_cass Integration test successful"
     exit 0
 else
-    echo "Integration test failed"
+    echo "cdr_cass Integration test failed"
     echo "$int_test"
+    exit 1
+fi
+
+# Finally, report back dbconnector
+if [ -n "$(echo $dbc_inte_test | grep '[-success-]')" ]
+then
+    echo "dbConnector Integration test successful"
+    exit 0
+else
+    echo "dbConnector Integration test failed"
     exit 1
 fi
