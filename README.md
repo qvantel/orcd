@@ -50,10 +50,17 @@ If you get the error "node is not installed" even though it is; it can be worked
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 ```
 
-When you have installed the dependencies, you'll need to clone this repository and fetch the subrepositories:
+When you have installed the dependencies, you'll need to clone this repository and fetch the subrepositories.
+
+To clone the repository run:
 ```
 git clone https://github.com/flygare/Qvantel.git
-./pullall.sh
+```
+
+To fetch the subrepositories you can run:
+```
+git submodule update --init --recursive --remote
+git submodule foreach -q --recursive 'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch'
 ```
 
 ### The Docker container script
