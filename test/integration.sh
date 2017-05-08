@@ -51,24 +51,24 @@ docker exec -it "$container_name" cqlsh -f "$schema_file"
 
 # It's up!
 # Run integration test
-echo "Running integration test"
+echo "Running cdr_cassandra integration test"
 int_test=$(./cdr_cass_integration_test.sh "cassandra_qvantel" 2>&1)
 code=$?
-echo "Integration test done"
+echo "cdr_cassandra Integration test done"
 
 # Test is done
 deallocate_cass_container
 #run dbconnector integration test
 echo "running dbconnector integration test"
 dbc_inte_test=$(./dbcIntegrationTest.sh 2>&1)
-result=$
+result=$?
 echo "dbconnector integration test done"
 
 # Finally, report back
 if [ -n "$(echo $int_test | grep '[SUCCESS]')" ] && [ $code -eq 0 ]
 then
     echo "cdr_cass Integration test successful"
-    exit 0
+    
 else
     echo "cdr_cass Integration test failed"
     echo "$int_test"
@@ -76,7 +76,7 @@ else
 fi
 
 # Finally, report back dbconnector
-if [ -n "$(echo $dbc_inte_test | grep '[-success-]')" ]
+if [ -n "$(echo $dbc_inte_test | grep '[-success-]')" ] && [ $result -eq 0 ]
 then
     echo "dbConnector Integration test successful"
     exit 0
