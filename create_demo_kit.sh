@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 GRAPHITE_CONTAINER="graphite"
 GRAPHITE_DEMO_PORT=2000
