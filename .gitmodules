@@ -1,7 +1,3 @@
-[submodule "QvantelBackend"]
-	path = QvantelBackend
-	url = git@github.com:flygare/QvantelBackend.git
-	branch = master
 [submodule "QvantelFrontend"]
 	path = QvantelFrontend
 	url = git@github.com:flygare/QvantelFrontend.git
