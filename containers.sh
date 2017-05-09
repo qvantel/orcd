@@ -5,6 +5,11 @@ then
     echo "Remove sudo/exit root user mode."
     exit 1
 fi
+s=$(./before_install.sh)
+if [ ! -z "$s" ]; then
+    echo "$s"
+    exit 1
+fi
 start=$SECONDS
 
 RED=$(tput setaf 1)
