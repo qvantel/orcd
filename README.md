@@ -2,7 +2,7 @@
 
 orcD
 =======
-`orcD`, or `Operational Rated CDR Dashboard` is a proof of concept to visualize rated [CDR's](https://en.wikipedia.org/wiki/Call_detail_record) on a heat and world map. The heatmap is visualizing CDR's that has gone through some rating/billing system which has a product tied to it, which is visualized in the heatmap. The worldmap visualizes rated CDR's which has a roaming status in the record.
+`orcD`, or `Operational Rated CDR Dashboard` is a proof of concept to visualize rated [CDR's](https://en.wikipedia.org/wiki/Call_detail_record) on a heat and world map. The HeatMap is visualizing CDR's that has gone through some rating/billing system which has a product tied to it, which is visualized in the HeatMap. The GeoMap visualizes rated CDR's which has a roaming status in the record.
 
 ### Backend
 
@@ -21,7 +21,7 @@ Containers:
 A single Grafana container with a few plugins that fetches data from the graphite docker container.
 
 Plugins:
-- Worldmap
+- GeoMap
 - Heatmap
 
 **Team members:** Dennis Rojas, Rasmus Appelqvist, Tord Eliasson, Per Lennartsson, Filip Stål, Oliver Örnmyr, Kim Sand
