@@ -119,10 +119,10 @@ If you now navigate to http://localhost:3000 you should access your webserver co
 You can also navigate to http://localhost:2000 to directly access your webserver containing Graphite.
 
 ### Testing
-## Unit tests
+#### Unit tests
 For the CDRGenerator and the DBConnector we have implemented various test cases for unit testing.
 
-## Integration tests
+#### Integration tests
 We have some bash scripts that tests the CDRGenerator -> Cassandra -> DBConnector -> Graphite path.
 There is also a python script that tests this pipeline.
 
