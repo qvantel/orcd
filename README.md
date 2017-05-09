@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/flygare/orcd.svg?branch=master)](https://travis-ci.org/flygare/orcd)
 
-Qvantel
+orcD
 =======
 
 ### Backend
@@ -56,7 +56,7 @@ When you have installed the dependencies, you'll need to clone this repository a
 
 To clone the repository run:
 ```
-git clone https://github.com/flygare/Qvantel.git
+git clone https://github.com/qvantel/orcd.git
 ```
 
 To fetch the subrepositories you can run:
