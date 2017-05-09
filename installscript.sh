@@ -1,6 +1,13 @@
 #!/bin/bash
 
 if [[ $OSTYPE == *"darwin"* ]]; then
+    which -s brew
+    if [[ $? != 0 ]] ; then
+        # Install Homebrew
+        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    else
+        brew update
+    fi
     brew install md5sha1sum
     brew install git
     brew install sbt
@@ -8,6 +15,7 @@ if [[ $OSTYPE == *"darwin"* ]]; then
     brew install node # Will install npm as well
     brew install docker
     brew cask install java
+    npm install -g grunt
 else
     # Check that the distro is debian based
     ubuntu=0
