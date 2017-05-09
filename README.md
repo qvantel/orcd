@@ -14,7 +14,7 @@ Containers:
 - DBConnector
 - Graphite/Carbon
 
-**Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozef Miljak and Martin Svensson
+**Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozef Miljak and Martin Svensson.
 
 ### Frontend
 
@@ -24,7 +24,7 @@ Plugins:
 - GeoMap
 - Heatmap
 
-**Team members:** Dennis Rojas, Rasmus Appelqvist, Tord Eliasson, Per Lennartsson, Filip Stål, Oliver Örnmyr, Kim Sand
+**Team members:** Dennis Rojas, Rasmus Appelqvist, Tord Eliasson, Per Lennartsson, Filip Stål, Oliver Örnmyr and Kim Sand.
 
 ## Sub repositories
 
@@ -42,8 +42,9 @@ In order to install everything and get it up and running, you'll first need to d
 - Java
 - NPM
 - NodeJS
+- Grunt
 
-This can be done by running the following command for debian based distros:
+This can be done by running the following command for MacOS and debian based distros:
 ```
 ./installscript.sh
 ```
