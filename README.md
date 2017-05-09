@@ -2,6 +2,7 @@
 
 orcD
 =======
+`orcD`, or `Operational Rated CDR Dashboard` is a proof of concept to visualize rated [CDR's](https://en.wikipedia.org/wiki/Call_detail_record) on a heat and world map. The heatmap is visualizing CDR's that has gone through some rating/billing system which has a product tied to it, which is visualized in the heatmap. The worldmap visualizes rated CDR's which has a roaming status in the record.
 
 ### Backend
 
