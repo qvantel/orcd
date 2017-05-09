@@ -35,7 +35,11 @@ For more information about each component, please check their git repositories r
 In this section, we'll go through how to setup the pipeline. It will cover dependencies, how to manage containers and how to use the system.
 
 ### Dependencies
+<<<<<<< 4469dac9ce70c374853e932bd2ec3cd618c5cabb
 In order to install everything and get it up and running, you'll first need to download and install some dependencies. This can be done manually or by running the following command for debian based distros:
+=======
+In order to install everything and get it up and running, you'll first need to download and install some dependencies. This can be done manually or by running the following command for debian based distros:
+>>>>>>> Update README.md
 ```
 ./installscript.sh
 ```
