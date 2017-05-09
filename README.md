@@ -108,7 +108,7 @@ This may take a while as it will download, install and startup everything needed
 
 
 ### Usage of the system
-If you now navigate to http://localhost:3000 you should access your webserver containing Grafana. You will be greeted with a login screen, you can login with **qvantel** as username and **qvantel** as password. The two plugins contained in the frontend repository (GeoMap and Heatmap) are pre-installed and can be found in their respective pre-set dashboards.
+If you now navigate to http://localhost:3000 you should access your webserver containing Grafana. You will be greeted with a login screen, you can login with **admin** as username and **admin** as password. The two plugins contained in the frontend repository (GeoMap and Heatmap) are pre-installed and can be found in their respective pre-set dashboards.
 
 You can also navigate to http://localhost:2000 to directly access your webserver containing Graphite.
 
