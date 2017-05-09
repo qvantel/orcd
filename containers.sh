@@ -33,12 +33,6 @@ GRAPHITE_IMAGE_VERSION="latest" # Using latest is bad and can break,fix
 GRAPHITE_IMAGE=hopsoft/graphite-statsd:$GRAPHITE_IMAGE_VERSION
 GRAPHITE_CONTAINER_NAME="graphite"
 
-# Backend
-BACKEND_IMAGE_NAME="backend"
-BACKEND_IMAGE_VERSION="latest"
-BACKEND_IMAGE=$BACKEND_IMAGE_NAME:$BACKEND_IMAGE_VERSION
-BACKEND_CONTAINER_NAME="backend"
-
 # CDRGenerator
 CDRGENERATOR_IMAGE_NAME="cdrgenerator"
 CDRGENERATOR_IMAGE_VERSION="latest"
@@ -105,28 +99,6 @@ function graphite {
         fi
 }
 
-function backend {
-    echo "The back end container is currently disabled"
-    # Backend container
-    # Port: 8080
-    # echo -e $YELLOW"### Cleaning backend container"$RESET
-    # if [[ "$(docker ps -all | grep $BACKEND_CONTAINER_NAME)" ]]; then
-    #     clean_container $BACKEND_CONTAINER_NAME
-    # fi
-    # if [[ "$(docker images -q $BACKEND_IMAGE_NAME 2> /dev/null)" == "" ]]; then
-    #     docker rmi $BACKEND_IMAGE
-    # fi
-    # echo -e $YELLOW"### Compiling backend container"$RESET
-    # (cd ./QvantelBackend; sbt assembly)
-    # echo -e $YELLOW"### Building backend container"$RESET
-    # docker build -t $BACKEND_IMAGE_NAME ./QvantelBackend
-    # echo -e $GREEN"### Starting backend container"$RESET
-    # docker run \
-        # --restart=always \
-        # --name $BACKEND_CONTAINER_NAME \
-        # -p 8080:8080 \
-        # -d $BACKEND_IMAGE
-}
 
 function verify_cassandra_cdrtables {
     force_build=$1 # If building, don't check hashes. BUILD IT!
