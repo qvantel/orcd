@@ -5,14 +5,13 @@ orcD
 
 ### Backend
 
-A set of docker containers that generates CDR records into CassandraDB, syncs the cassandra CDR records to Graphite/Carbon and is then accessed from the frontend
+A set of docker containers that generates CDR records into Cassandra, syncs the cassandra CDR records to Graphite/Carbon and is then accessed from the frontend GUI.
 
 Containers:
 - CDRGenerator
-- CassandraDB
+- Cassandra
 - DBConnector
 - Graphite/Carbon
-- REST backend
 
 **Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozef Miljak and Martin Svensson
 

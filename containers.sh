@@ -29,7 +29,7 @@ CASSANDRA_PORT=9042
 
 # Graphite
 GRAPHITE_IMAGE_NAME="graphite"
-GRAPHITE_IMAGE_VERSION="latest" # Using latest is bad and can break,fix
+GRAPHITE_IMAGE_VERSION="latest"
 GRAPHITE_IMAGE=hopsoft/graphite-statsd:$GRAPHITE_IMAGE_VERSION
 GRAPHITE_CONTAINER_NAME="graphite"
 
@@ -140,14 +140,14 @@ function cdrgenerator {
     fi
     echo -e $YELLOW"### Compiling CDRGenerator container"$RESET
     sbt_fail=0
-    (cd ./QvantelCDRGenerator; sbt assembly) || sbt_fail=1
+    (cd ./orcd-generator; sbt assembly) || sbt_fail=1
     
     if [[ $sbt_fail -ne 0 ]];
     then
         echo -e $RED"### Failed to compile CDRGenerator"$RESET
     else
         echo -e $YELLOW"### Building CDRGenerator container"$RESET
-        docker build -t $CDRGENERATOR_IMAGE_NAME ./QvantelCDRGenerator
+        docker build -t $CDRGENERATOR_IMAGE_NAME ./orcd-generator
     
         echo -e $GREEN"### Starting CDRGenerator container"$RESET
         docker run $DOCKER_OPTS \
@@ -172,14 +172,14 @@ function dbconnector {
     
     echo -e $YELLOW"### Compiling DBConnector program"$RESET
     sbt_fail=0
-    (cd ./QvantelDBConnector; sbt assembly) || sbt_fail=1
+    (cd ./orcd-dbconnector; sbt assembly) || sbt_fail=1
     
     if [[ $sbt_fail -ne 0 ]];
     then
         echo -e $RED"### Failed to compile DBConnector"$RESET
     else
         echo -e $YELLOW"### Building DBConnector image"$RESET
-        docker build -t $DBCONNECTOR_IMAGE_NAME ./QvantelDBConnector
+        docker build -t $DBCONNECTOR_IMAGE_NAME ./orcd-dbconnector
     
         echo -e $GREEN"### Starting DBConnector container"$RESET
         docker run $DOCKER_OPTS \
@@ -204,12 +204,12 @@ function frontend {
 
     npm_fail=0
     echo -e $YELLOW"### Building frontend plugins"$RESET
-    npm --prefix ./QvantelFrontend run build || npm_fail=1
+    npm --prefix ./orcd-frontend run build || npm_fail=1
     if [[ $npm_fail -ne 0 ]]; then
         echo -e $RED"### Failed to build frontend plugins"$RESET
     else
         echo -e $YELLOW"### Building frontend image"$RESET
-        docker build -t $FRONTEND_IMAGE_NAME ./QvantelFrontend
+        docker build -t $FRONTEND_IMAGE_NAME ./orcd-frontend
 
         echo -e $GREEN"### Starting frontend container"$RESET
         docker run \
