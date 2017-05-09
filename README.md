@@ -35,7 +35,11 @@ For more information about each component, please check their git repositories r
 In this section, we'll go through how to setup the pipeline. It will cover dependencies, how to manage containers and how to use the system.
 
 ### Dependencies
-In order to install everything and get it up and running, you'll first need to download and install some dependencies:
+In order to install everything and get it up and running, you'll first need to download and install some dependencies. This can be done manually or by running the following command for debian based distros:
+```
+./installscript.sh
+```
+The dependencies you will need are:
 - Git
 - Docker
 - SBT
@@ -48,6 +52,7 @@ This can be done by running the following command for MacOS and debian based dis
 ```
 ./installscript.sh
 ```
+
 If you get the error "node is not installed" even though it is; it can be worked around by symlinking nodejs to node:
 ```
 sudo ln -s /usr/bin/nodejs /usr/bin/node
