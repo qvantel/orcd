@@ -12,7 +12,7 @@ app_conf_path="src/main/resources/application.conf"
 batch_limit="batch\.limit"
 batch_size_limit="cassandra\.element\.batch\.size"
 cassandra_port="port"
-cassandra_it_port=9042
+cassandra_it_port=9043
 cassandra_keyspace="qvantel"
 cassandra_cdr_table_name="cdr"
 
@@ -37,7 +37,7 @@ pushd "../$repo" 2>&1 1>/dev/null
 [ -f "$app_conf_path" ] || { echo "No such file: $app_conf_path [no success]"; exit 1; }
 
 # Warn if has already edited.
-[ -z "$(git diff $app_conf_path)" ] || { echo "It appears that the $app_conf_path has already been edited(Checked with git diff). Exiting the test. [no success]"; exit 1; }
+#[ -z "$(git diff $app_conf_path)" ] || { echo "It appears that the $app_conf_path has already been edited(Checked with git diff). Exiting the test. [no success]"; exit 1; }
 
 # Integration specific config
 # match "gen.batch.limit=number" and force number to be 1
@@ -87,18 +87,18 @@ has_records=$(cat "$temp_cassandra_result_file" | grep -oP '\s+[0-9]+')
 
 # use head and tail to get the first and last.
 has_records_cdr=$(echo "$has_records" | head -n+1)
-
+#
 # cleanup
-if [ -f "$temp_cassandra_result_file" ]
-then
-    echo "Removed temp file"
-    rm "$temp_cassandra_result_file"
-fi
+#if [ -f "$temp_cassandra_result_file" ]
+#then
+ #   echo "Removed temp file"
+  #  rm "$temp_cassandra_result_file"
+#fi
 
 # Exit codes
-if [ $has_records_cdr -eq 1 ]
-then
-    echo '[success]'
-else
-    echo '[no success]'
-fi
+#if [ $has_records_cdr -eq 1 ]
+#then
+ #   echo '[success]'
+#else
+ #   echo '[no success]'
+#fi

@@ -7,12 +7,17 @@ cass_container_name="cassandra_qvantel"
 batch_limit="batch\.limit"
 batch_size_limit="cassandra\.element\.batch\.size"
 cassandra_port="port"
-cassandra_it_port=9042
+cassandra_it_port=9043
 cassandra_keyspace="qvantel"
 cassandra_cdr_table_name="cdr"
 limit="theLimit"
+graphitePort="port"
 tempGraphiteFile="tempGraphiteData.txt"
 jar_directory="target/scala-2.11/DBConnector.jar"
+graphite_name="graphite_Test"
+
+newPort=2025
+app_conf_path="src/main/resources/application.conf"
 
 # --> Run cdr-cassandra integration test
 echo "Running cdr--> cassandra integration test!"
@@ -34,11 +39,10 @@ sed -i "s#${limit}\ *\=\ *\-*[0-9]*#${limit}\=-1#g" "$app_conf_path"
 popd
 
 #now run curl to check if the data is at graphite. in this case we are lookng att callplan
-curl '127.0.0.1:2000/render?target=qvantel.product.voice.CallPlanNormal&format=json' -o $tempGraphiteFile
+curl '127.0.0.1:2090/render?target=qvantel.product.voice.CallPlanNormal&format=json' -o $tempGraphiteFile
 
 #check if the file contain data by
 # Read from file and grep for rows.
-#echo ${grep -Fxq "\[\]" $tempGraphiteFile}
 if grep -Fxq "[]" $tempGraphiteFile
 then
 #there are no records in this file
@@ -49,6 +53,13 @@ else
 echo "dbconnector integration test is done and successfull"
 echo "[-success-]"
 fi
+
+# reset the config file to its origin values
+pushd ../QvantelDBConnector/
+#change the port for the graphite to a new port in config file 
+sed -i "s#c.port = [0-9]*#c.port = 9042#g" "$app_conf_path"
+sed -i "s#g.port = [0-9]*#g.port = 2003#g" "$app_conf_path"
+popd
 
 #now remove the temp file 
 rm -f $tempGraphiteFile

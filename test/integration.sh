@@ -10,7 +10,11 @@ test -z "$(which git >/dev/null)" || { echo "Git not available"; exit 1; }
 
 schema_file="/schema.cql"
 container_name="int_cassandra"
+
 container_image_name="cassandra_qvantel"
+dbc_app_conf_path="src/main/resources/application.conf"
+dbc_container_image="hopsoft/graphite-statsd"
+dbc_container_name="dbc_test_container"
 cass_port="9043"
 
 test -n "$(docker images | grep $container_image_name)" || { echo "Cassandra image not found.)"; exit 1; }
@@ -30,13 +34,51 @@ function provision_cass_container {
     fi
 }
 
+function provision_dbc_container {
+
+    #provision container
+    if [ -n "$(docker images | grep $dbc_container_image)" ]
+    then 
+        if [ -n "$(docker ps -a | grep $dbc_container_name)" ]
+            then
+             deallocat_dbc_container
+        fi
+        
+        echo "running $dbc_container_name"
+        #change the port for the graphite to a new port in config file 
+        sed -i "s#c.port = [0-9]*#c.port = 9043#g" $dbc_app_conf_path 
+        sed -i "s#g.port = [0-9]*#g.port = 2025#g" $dbc_app_conf_path
+        # run docker to create new container with new port and  
+        docker run \
+        --name $dbc_container_name \
+        -p 2025-2026:2003-2004 \
+        -p 2090:80 \
+        -p 8125:8125/udp \
+        -p 8126:8126 \
+        -p 2027-2028:2023-2024 \
+        -d hopsoft/graphite-statsd:latest
+    fi
+}
+
+function deallocat_dbc_container {
+
+    # deallocat the dbc container
+    docker stop "$dbc_container_name"
+    echo "dbc connector container stopped"
+    docker rm "$dbc_container_name"
+    echo "dbc connector removed"
+}
+
 function deallocate_cass_container {
     # And we're back, now clean up the container
     docker stop  "$container_name" 2>&1 1>/dev/null && echo "Stopping $container_name"
-    docker rm  "$container_name" 2>&1 1>/dev/null && echo "Stopping $container_name"
+    docker rm  "$container_name" 2>&1 1>/dev/null && echo "removing $container_name"
 }
 
 provision_cass_container
+pushd ../QvantelDBConnector/
+provision_dbc_container
+popd
 
 # Wait until cqlsh is up and running
 echo "Waiting for cqlsh to be up"
@@ -56,13 +98,16 @@ int_test=$(./cdr_cass_integration_test.sh "cassandra_qvantel" 2>&1)
 code=$?
 echo "cdr_cassandra Integration test done"
 
-# Test is done
-deallocate_cass_container
 #run dbconnector integration test
 echo "running dbconnector integration test"
 dbc_inte_test=$(./dbcIntegrationTest.sh 2>&1)
 result=$?
 echo "dbconnector integration test done"
+
+# Test is done
+#remove cassandra container
+deallocate_cass_container
+deallocat_dbc_container
 
 # Finally, report back
 if [ -n "$(echo $int_test | grep '[SUCCESS]')" ] && [ $code -eq 0 ]
