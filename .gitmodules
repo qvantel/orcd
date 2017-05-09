@@ -1,9 +1,12 @@
 [submodule "orcd-frontend"]
 	path = orcd-frontend
 	url = https://github.com/flygare/orcd-frontend.git
+    branch = master
 [submodule "orcd-dbconnector"]
 	path = orcd-dbconnector
 	url = https://github.com/flygare/orcd-dbconnector.git
+    branch = master
 [submodule "orcd-generator"]
 	path = orcd-generator
 	url = https://github.com/flygare/orcd-generator.git
+    branch = master
