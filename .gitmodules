@@ -1,12 +1,9 @@
-[submodule "QvantelFrontend"]
-	path = QvantelFrontend
-	url = git@github.com:flygare/QvantelFrontend.git
-	branch = master
-[submodule "QvantelCDRGenerator"]
-	path = QvantelCDRGenerator
-	url = git@github.com:flygare/QvantelCDRGenerator.git
-	branch = master
-[submodule "QvantelDBConnector"]
-	path = QvantelDBConnector
-	url = git@github.com:flygare/QvantelDBConnector.git
-	branch = master
+[submodule "orcd-frontend"]
+	path = orcd-frontend
+	url = git@github.com:flygare/orcd-frontend.git
+[submodule "orcd-dbconnector"]
+	path = orcd-dbconnector
+	url = git@github.com:flygare/orcd-dbconnector.git
+[submodule "orcd-generator"]
+	path = orcd-generator
+	url = git@github.com:flygare/orcd-generator.git
