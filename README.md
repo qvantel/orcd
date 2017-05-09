@@ -2,7 +2,7 @@
 
 orcD
 =======
-`orcD`, or `Operational Rated CDR Dashboard` is a proof of concept to visualize rated [CDR's](https://en.wikipedia.org/wiki/Call_detail_record) on a heat and world map. The heatmap is visualizing CDR's that has gone through some rating/billing system which has a product tied to it, which is visualized in the heatmap. The worldmap visualizes rated CDR's which has a roaming status in the record.
+`orcD`, or `Operational Rated CDR Dashboard` is a proof of concept to visualize rated [CDR's](https://en.wikipedia.org/wiki/Call_detail_record) on a heat and world map. The HeatMap is visualizing CDR's that has gone through some rating/billing system which has a product tied to it, which is visualized in the HeatMap. The GeoMap visualizes rated CDR's which has a roaming status in the record.
 
 ### Backend
 
@@ -14,17 +14,17 @@ Containers:
 - DBConnector
 - Graphite/Carbon
 
-**Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozef Miljak and Martin Svensson
+**Team members:** Johan Bjäreholt, Robin Flygare, Gorges Gorges, Erik Lilja, Max Meldrum, Niklas Doung, Jozef Miljak and Martin Svensson.
 
 ### Frontend
 
 A single Grafana container with a few plugins that fetches data from the graphite docker container.
 
 Plugins:
-- Worldmap
+- GeoMap
 - Heatmap
 
-**Team members:** Dennis Rojas, Rasmus Appelqvist, Tord Eliasson, Per Lennartsson, Filip Stål, Oliver Örnmyr, Kim Sand
+**Team members:** Dennis Rojas, Rasmus Appelqvist, Tord Eliasson, Per Lennartsson, Filip Stål, Oliver Örnmyr and Kim Sand.
 
 ## Sub repositories
 
@@ -42,8 +42,9 @@ In order to install everything and get it up and running, you'll first need to d
 - Java
 - NPM
 - NodeJS
+- Grunt
 
-This can be done by running the following command for debian based distros:
+This can be done by running the following command for MacOS and debian based distros:
 ```
 ./installscript.sh
 ```
@@ -108,7 +109,7 @@ This may take a while as it will download, install and startup everything needed
 
 
 ### Usage of the system
-If you now navigate to http://localhost:3000 you should access your webserver containing Grafana. You will be greeted with a login screen, you can login with **qvantel** as username and **qvantel** as password. The two plugins contained in the frontend repository (GeoMap and Heatmap) are pre-installed and can be found in their respective pre-set dashboards.
+If you now navigate to http://localhost:3000 you should access your webserver containing Grafana. You will be greeted with a login screen, you can login with **admin** as username and **admin** as password. The two plugins contained in the frontend repository (GeoMap and Heatmap) are pre-installed and can be found in their respective pre-set dashboards.
 
 You can also navigate to http://localhost:2000 to directly access your webserver containing Graphite.
 
