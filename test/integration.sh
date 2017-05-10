@@ -16,6 +16,7 @@ dbc_app_conf_path="src/main/resources/application.conf"
 dbc_container_image="hopsoft/graphite-statsd"
 dbc_container_name="dbc_test_container"
 cass_port="9043"
+dbc_graph_port="2025"
 
 test -n "$(docker images | grep $container_image_name)" || { echo "Cassandra image not found.)"; exit 1; }
 
@@ -46,8 +47,8 @@ function provision_dbc_container {
         
         echo "running $dbc_container_name"
         #change the port for the graphite to a new port in config file 
-        sed -i "s#c.port = [0-9]*#c.port = 9043#g" $dbc_app_conf_path 
-        sed -i "s#g.port = [0-9]*#g.port = 2025#g" $dbc_app_conf_path
+        sed -i "s#c.port = [0-9]*#c.port = $cass_port#g" $dbc_app_conf_path 
+        sed -i "s#g.port = [0-9]*#g.port = $dbc_graph_port#g" $dbc_app_conf_path
         # run docker to create new container with new port and  
         docker run \
         --name $dbc_container_name \

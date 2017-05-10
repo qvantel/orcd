@@ -89,16 +89,16 @@ has_records=$(cat "$temp_cassandra_result_file" | grep -oP '\s+[0-9]+')
 has_records_cdr=$(echo "$has_records" | head -n+1)
 #
 # cleanup
-#if [ -f "$temp_cassandra_result_file" ]
-#then
- #   echo "Removed temp file"
-  #  rm "$temp_cassandra_result_file"
-#fi
+if [ -f "$temp_cassandra_result_file" ]
+then
+   echo "Removed temp file"
+   rm "$temp_cassandra_result_file"
+fi
 
 # Exit codes
-#if [ $has_records_cdr -eq 1 ]
-#then
- #   echo '[success]'
-#else
- #   echo '[no success]'
-#fi
+if [ $has_records_cdr -eq 1 ]
+then
+   echo '[success]'
+else
+   echo '[no success]'
+fi
