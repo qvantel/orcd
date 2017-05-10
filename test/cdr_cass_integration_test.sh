@@ -37,7 +37,7 @@ pushd "../$repo" 2>&1 1>/dev/null
 [ -f "$app_conf_path" ] || { echo "No such file: $app_conf_path [no success]"; exit 1; }
 
 # Warn if has already edited.
-#[ -z "$(git diff $app_conf_path)" ] || { echo "It appears that the $app_conf_path has already been edited(Checked with git diff). Exiting the test. [no success]"; exit 1; }
+[ -z "$(git diff $app_conf_path)" ] || { echo "It appears that the $app_conf_path has already been edited(Checked with git diff). Exiting the test. [no success]"; exit 1; }
 
 # Integration specific config
 # match "gen.batch.limit=number" and force number to be 1
@@ -59,8 +59,6 @@ grep -q "${cassandra_port}=\"${cassandra_it_port}\"" "$app_conf_path" && echo -n
 
 # Finally, run the jar.
 # Run with timeout
-pwd
-
 timeout $timeout java -Dnetty.epoll.enabled=false -Dconfig.file=$app_conf_path -Dtrends.dir=src/main/resoucers/trends/ -jar "$jar_directory"
 
 # Return the config file as it was.
@@ -78,7 +76,6 @@ docker exec -i "$cass_container_name" cqlsh << EOF > "$temp_cassandra_result_fil
 use $cassandra_keyspace;
 select count(*) from $cassandra_cdr_table_name;
 EOF
-#$cassandra_cdr_table_name;
 # If the query was successful, there should now be a file.
 [ -f $temp_cassandra_result_file ] || { echo "No cassandra result file[no success]"; exit 1; }
 
