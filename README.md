@@ -23,6 +23,7 @@ A single Grafana container with a few plugins that fetches data from the graphit
 Plugins:
 - GeoMap
 - Heatmap
+- Cassandra Health
 
 **Team members:** Dennis Rojas, Rasmus Appelqvist, Tord Eliasson, Per Lennartsson, Filip Stål, Oliver Örnmyr and Kim Sand.
 
@@ -34,8 +35,27 @@ For more information about each component, please check their git repositories r
 
 In this section, we'll go through how to setup the pipeline. It will cover dependencies, how to manage containers and how to use the system.
 
+### Cloning the repository
+
+The first thing we'll need to do is to clone the master repository. To clone the repository run:
+```
+git clone https://github.com/qvantel/orcd.git
+```
+
+The repository contains a set of subrepositories, to fetch the subrepositories you can run:
+```
+git submodule update --init --recursive --remote
+git submodule foreach -q --recursive 'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch; git pull'
+```
+
 ### Dependencies
-In order to install everything and get it up and running, you'll first need to download and install some dependencies:
+In order to install everything and get it up and running, you'll first need to download and install some dependencies. This can be done manually or by running the following command for debian based distros and MacOS:
+
+```
+./installscript.sh
+```
+
+The dependencies you will need are:
 - Git
 - Docker
 - SBT
@@ -44,32 +64,15 @@ In order to install everything and get it up and running, you'll first need to d
 - NodeJS
 - Grunt
 
-This can be done by running the following command for MacOS and debian based distros:
-```
-./installscript.sh
-```
 If you get the error "node is not installed" even though it is; it can be worked around by symlinking nodejs to node:
 ```
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 ```
 
-When you have installed the dependencies, you'll need to clone this repository and fetch the subrepositories.
-
-To clone the repository run:
-```
-git clone https://github.com/qvantel/orcd.git
-```
-
-To fetch the subrepositories you can run:
-```
-git submodule update --init --recursive --remote
-git submodule foreach -q --recursive 'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch'
-```
-
 ### The Docker container script
 In the root folder, you'll see a script called **containers.sh**. This script manages all the required docker containers in order to maintain the pipeline (CDR -> Cassandra -> DBConnector -> Graphite -> Grafana) (?). This script can **start**, **stop** and **remove** containers.
 
-Footnote: our containerscript requires you to have the permission as normal user to run docker commands. This means you can't run `containers.sh` as root. To make your user be able to run docker commands, [please visit this wiki page.](https://github.com/flygare/orcd/wiki/Docker-Help)
+**Important**: our containerscript requires you to have the permission as normal user to run docker commands. This means you can't run `containers.sh` as root. To make your user be able to run docker commands, [please visit this wiki page.](https://github.com/flygare/orcd/wiki/Docker-Help)
 
 To start all the containers run the following command:
 ```
@@ -114,10 +117,10 @@ If you now navigate to http://localhost:3000 you should access your webserver co
 You can also navigate to http://localhost:2000 to directly access your webserver containing Graphite.
 
 ### Testing
-## Unit tests
+#### Unit tests
 For the CDRGenerator and the DBConnector we have implemented various test cases for unit testing.
 
-## Integration tests
+#### Integration tests
 We have some bash scripts that tests the CDRGenerator -> Cassandra -> DBConnector -> Graphite path.
 There is also a python script that tests this pipeline.
 
