@@ -48,7 +48,7 @@ git submodule foreach -q --recursive 'branch="$(git config -f $toplevel/.gitmodu
 ```
 
 ### Dependencies
-In order to install everything and get it up and running, you'll first need to download and install some dependencies. This can be done manually or by running the following command for debian based distros:
+In order to install everything and get it up and running, you'll first need to download and install some dependencies. This can be done manually or by running the following command for debian based distros and MacOS:
 
 ```
 ./installscript.sh
@@ -62,11 +62,6 @@ The dependencies you will need are:
 - NPM
 - NodeJS
 - Grunt
-
-This can be done by running the following command for MacOS and debian based distros:
-```
-./installscript.sh
-```
 
 If you get the error "node is not installed" even though it is; it can be worked around by symlinking nodejs to node:
 ```
