@@ -1,22 +1,22 @@
 #!/bin/bash
 
 app_conf_path="src/main/resources/application.conf"
-limit="theLimit"
+limit="processing.maximumProcessingLimit"
 tempGraphiteFile="tempGraphiteData.txt"
 
 #match "limit=number" and force number to be 1
 pushd ../QvantelDBConnector/
-sed -i "s#${limit}\ *\=\ *\-*[0-9]*#${limit}\=5#g" "$app_conf_path"
+sed -i "s#${limit}\ *\=\ *\-*[0-9]*#${limit}\ = 5#g" "$app_conf_path"
 
 # now running the dbconnector
 echo "running dbconnector using sbt run"
 sbt run
 
 # now change the app.config file to its origin
-sed -i "s#${limit}\ *\=\ *\-*[0-9]*#${limit}\=-1#g" "$app_conf_path"
+sed -i "s#${limit}\ *\=\ *\-*[0-9]*#${limit}\ = -1#g" "$app_conf_path"
 
 # back to the directory you were in at the beginning
-popd
+popd 
 
 #now run curl to check if the data is at graphite. in this case we are looking for "callplanNormal"
 curl '127.0.0.1:2090/render?target=qvantel.product.voice.CallPlanNormal&format=json' -o $tempGraphiteFile
