@@ -63,7 +63,7 @@ function provision_dbc_container {
 
 function deallocat_dbc_container {
 
-    # deallocat the dbc container
+    # deallocate the dbc container
     docker stop "$dbc_container_name"
     echo "dbc connector container stopped"
     docker rm "$dbc_container_name"
@@ -92,7 +92,7 @@ done
 echo "Running schema"
 docker exec -it "$container_name" cqlsh -f "$schema_file"
 
-# It's up!
+# Cqlsh is up!
 # Run integration test
 echo "Running cdr_cassandra integration test"
 int_test=$(./cdr_cass_integration_test.sh "cassandra_qvantel" 2>&1)
