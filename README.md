@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/flygare/orcd.svg?branch=master)](https://travis-ci.org/flygare/orcd)
+[![Build Status](https://travis-ci.org/qvantel/orcd.svg?branch=master)](https://travis-ci.org/qvantel/orcd)
 
 orcD
 =======
