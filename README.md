@@ -70,7 +70,7 @@ sudo ln -s /usr/bin/nodejs /usr/bin/node
 ```
 
 ### The Docker container script
-In the root folder, you'll see a script called **containers.sh**. This script manages all the required docker containers in order to maintain the pipeline (CDR -> Cassandra -> DBConnector -> Graphite -> Grafana) (?). This script can **start**, **stop** and **remove** containers.
+In the root folder, you'll see a script called **containers.sh**. This script manages all the required docker containers in order to maintain the pipeline (Generator -> Cassandra -> DBConnector -> Graphite -> Grafana). This script can **start**, **stop** and **remove** containers.
 
 **Important**: our containerscript requires you to have the permission as normal user to run docker commands. This means you can't run `containers.sh` as root. To make your user be able to run docker commands, [please visit this wiki page.](https://github.com/flygare/orcd/wiki/Docker-Help)
 
